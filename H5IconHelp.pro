@@ -37,7 +37,7 @@ HEADERS +=\
 		  
 FORMS += \
     UI/propertydlg.ui \
-    hdatapropertydlg.ui
+    UI/hdatapropertydlg.ui
 
 unix{
 
