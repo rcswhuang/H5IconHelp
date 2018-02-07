@@ -671,7 +671,7 @@ void HPropertyDlg::ok_clicked()
     pCurObj->setFillPercentage(ui->fillPercentage->value());
     pCurObj->setFillStyle((Qt::BrushStyle)ui->fillStyle->currentData().toUInt());
     pCurObj->setFillColorName(strFillColor);
-    quint8 tt = ui->fillDirection->currentData().toUInt();
+    //quint8 tt = ui->fillDirection->currentData().toUInt();
     pCurObj->setFillDirection(ui->fillDirection->currentData().toUInt());
     pCurObj->setRotateAngle(ui->x_rotate->value());
     pCurObj->setRound(ui->rectRound);

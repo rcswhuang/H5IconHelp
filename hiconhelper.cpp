@@ -2,7 +2,9 @@
 #include "hicontemplate.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
-
+#include "hiconrectobj.h"
+#include "hgroupobj.h"
+#include "hpropertydlg.h"
 #include <QProcessEnvironment>
 
 HIconHelper::HIconHelper()
@@ -63,3 +65,21 @@ QPixmap HIconHelper::iconPixmap(const QString& strType,const QString& uuid)
 
     return QPixmap().fromImage(image);
 }
+
+void HIconHelper::setObjAttribute(HBaseObj* pObj)
+{
+    if(pObj == NULL)
+        return;
+    if(pObj->getShapeType() == enumComplex)
+    {
+        HPropertyDlg dlg(pObj);
+        dlg.exec();
+    }
+    else
+    {
+
+    }
+}
+
+
+

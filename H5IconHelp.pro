@@ -20,24 +20,29 @@ DEFINES += H5ICONHELP_DLL
 
 INCLUDEPATH += \
     ../include \
-    ../include/H5IconGui
+    ../include/H5IconGui \
+    ../include/H5IconHelp
 	
 CONFIG += qt thread all
 SOURCES += \
         hpropertydlg.cpp \
-    hfonthelper.cpp \
-    hiconhelper.cpp \
-    hdatapropertydlg.cpp
+        hfonthelper.cpp \
+        hiconhelper.cpp \
+        hdatapropertydlg.cpp \
+    hstation.cpp
 
 HEADERS +=\
-          hpropertydlg.h \
-    hfonthelper.h \
-    hiconhelper.h \
-    hdatapropertydlg.h
+        ../include/hiconapi.h \
+        ../include/H5IconHelp/h5iconhelpexport.h \
+        ../include/H5IconHelp/hpropertydlg.h \
+        ../include/H5IconHelp/hfonthelper.h \
+        ../include/H5IconHelp/hiconhelper.h \
+        ../include/H5IconHelp/hdatapropertydlg.h \
+    ../include/H5IconHelp/hstation.h
 		  
 FORMS += \
     UI/propertydlg.ui \
-    UI/hdatapropertydlg.ui
+    UI/datapropertydlg.ui
 
 unix{
 
