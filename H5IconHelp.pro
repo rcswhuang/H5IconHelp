@@ -29,7 +29,8 @@ SOURCES += \
         hfonthelper.cpp \
         hiconhelper.cpp \
         hdatapropertydlg.cpp \
-    hstation.cpp
+    hstation.cpp \
+    UI/hiconproperty.cpp
 
 HEADERS +=\
         ../include/hiconapi.h \
@@ -38,11 +39,13 @@ HEADERS +=\
         ../include/H5IconHelp/hfonthelper.h \
         ../include/H5IconHelp/hiconhelper.h \
         ../include/H5IconHelp/hdatapropertydlg.h \
-    ../include/H5IconHelp/hstation.h
+    ../include/H5IconHelp/hstation.h \
+    UI/hiconproperty.h
 		  
 FORMS += \
     UI/propertydlg.ui \
-    UI/datapropertydlg.ui
+    UI/datapropertydlg.ui \
+    UI/iconproperty.ui
 
 unix{
 
