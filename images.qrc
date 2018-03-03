@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/picoperator.png</file>
+        <file>images/runcontrol.png</file>
+    </qresource>
+</RCC>

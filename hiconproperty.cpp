@@ -1,14 +1,15 @@
-﻿#include "hpropertydlg.h"
-#include "ui_propertydlg.h"
+﻿#include "hiconproperty.h"
+#include "ui_iconproperty.h"
 #include "hiconapi.h"
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QVariant>
 #include <QFile>
 #include <math.h>
+
 HPropertyDlg::HPropertyDlg(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PropertyDlg)
+    ui(new Ui::IconProperty)
 {
     ui->setupUi(this);
 
@@ -25,7 +26,7 @@ HPropertyDlg::HPropertyDlg(QWidget *parent) :
 }
 
 HPropertyDlg::HPropertyDlg(HBaseObj* pObj,QWidget *parent):
-    QDialog(parent),ui(new Ui::PropertyDlg)
+    QDialog(parent),ui(new Ui::IconProperty)
 {
     ui->setupUi(this);
     btnGroup = new QButtonGroup;

@@ -25,27 +25,30 @@ INCLUDEPATH += \
 	
 CONFIG += qt thread all
 SOURCES += \
-        hpropertydlg.cpp \
         hfonthelper.cpp \
         hiconhelper.cpp \
-        hdatapropertydlg.cpp \
-    hstation.cpp \
-    UI/hiconproperty.cpp
+        hstation.cpp \
+        hanaloguepage.cpp \
+        hdigitalpage.cpp \
+        hrelaypage.cpp \
+        hiconproperty.cpp
 
 HEADERS +=\
         ../include/hiconapi.h \
         ../include/H5IconHelp/h5iconhelpexport.h \
-        ../include/H5IconHelp/hpropertydlg.h \
         ../include/H5IconHelp/hfonthelper.h \
         ../include/H5IconHelp/hiconhelper.h \
-        ../include/H5IconHelp/hdatapropertydlg.h \
-    ../include/H5IconHelp/hstation.h \
-    UI/hiconproperty.h
+        ../include/H5IconHelp/hstation.h \
+        ../include/H5IconHelp/hanaloguepage.h \
+        ../include/H5IconHelp/hdigitalpage.h \
+        ../include/H5IconHelp/hrelaypage.h \
+        ../include/H5IconHelp/hiconproperty.h
 		  
 FORMS += \
-    UI/propertydlg.ui \
-    UI/datapropertydlg.ui \
-    UI/iconproperty.ui
+    UI/iconproperty.ui \
+    UI/analoguepage.ui \
+    UI/digitalpage.ui \
+    UI/relaypage.ui
 
 unix{
 
@@ -64,3 +67,6 @@ unix {
     target.path = /users/huangw/lib
     INSTALLS += target
 }
+
+RESOURCES += \
+    images.qrc

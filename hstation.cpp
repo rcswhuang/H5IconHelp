@@ -1,5 +1,110 @@
 ﻿#include "hstation.h"
+#include "publicdata.h"
 
+ATTRINFO DgtAttrInfo[] =
+{
+    {ATTR_DGT_4_STATE_VALUE,   "工程值(双遥信)"},
+    {ATTR_DGT_VALUE,           "工程值"},
+    {0,                          NULL}
+};
+
+ATTRINFO AnaAttrInfo[] =
+{
+    {ATTR_ANA_VALUE,         "工程值"},
+    {ATTR_ANA_CC1,           "偏移"},
+    {ATTR_ANA_CC2,           "系数"},
+    {0,                      NULL}
+};
+
+HStationHelper::HStationHelper()
+{
+
+}
+
+HStationHelper::~HStationHelper()
+{
+    //while(stationList.is)
+}
+
+HStationHelper* HStationHelper::m_pInstance = NULL;
+HStationHelper* HStationHelper::Instance()
+{
+    if(!m_pInstance)
+    {
+        m_pInstance = new HStationHelper;
+        m_pInstance->loadStation();
+    }
+    return m_pInstance;
+}
+
+
+void HStationHelper::loadStation()
+{
+    stationList.loadStation();
+}
+
+HStation* HStationHelper::getStation(quint16 wStationID)
+{
+    return stationList.getStation(wStationID);
+}
+
+//获取厂站列表
+QList<HStation*> HStationHelper::getStationList()
+{
+    return stationList.pStationList;
+}
+
+///////////////////////////////////厂站列表/////////////////////////////////////////////////////
+HStationList::HStationList()
+{
+
+}
+
+HStationList::~HStationList()
+{
+
+}
+
+
+//加载厂站信息
+void HStationList::loadStation()
+{
+
+}
+
+//厂站ID获取厂站
+HStation* HStationList::getStation(quint16 wStationID)
+{
+
+    for(int i = 0; i < pStationList.count();i++)
+    {
+        HStation* pStation = pStationList[i];
+        if(wStationID == pStation->getNo())
+            return pStation;
+    }
+    return NULL;
+
+}
+
+//厂站地址获取厂站
+HStation* HStationList::getRtu(quint16 wStationAddress)
+{
+    for(int i = 0; i < pStationList.count();i++)
+    {
+        HStation* pStation = pStationList[i];
+        if(wStationAddress == pStation->getAddress())
+            return pStation;
+    }
+    return NULL;
+}
+
+//索引厂站
+HStation* HStationList::findStation(int nIndex)
+{
+    return pStationList.value(nIndex);
+}
+
+///////////////////////////////////////////////厂站信息//////////////////////////////////////
 HStation::HStation()
 {
     pAnalogue = NULL;
