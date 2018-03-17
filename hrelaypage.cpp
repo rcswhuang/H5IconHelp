@@ -5,9 +5,7 @@
 #include <QButtonGroup>
 #include <QColorDialog>
 #include <QFontDialog>
-#include "hbaseobj.h"
-#include "hiconrectobj.h"
-#include "hiconcomplexobj.h"
+#include "hiconsymbol.h"
 
 HRelayPage::HRelayPage(QWidget *parent) :
     QDialog(parent),
@@ -28,10 +26,15 @@ HRelayPage::HRelayPage(HBaseObj* pObj,QWidget *parent):
     wStation = (ushort)-1;
     wPoint = (ushort)-1;
     wAttrib = 0;
-    pCurObj = (HIconComplexObj*)pObj;
+    pCurObj = (HIconObj*)pObj;
 
-    //connect(ui->okBtn,SIGNAL(clicked()),this,SLOT(onOk()));
-    //connect(ui->cancelBtn,SIGNAL(clicked()),this,SLOT(onCancel()));
+    connect(ui->okBtn,SIGNAL(clicked()),this,SLOT(onOk()));
+    connect(ui->cancelBtn,SIGNAL(clicked()),this,SLOT(onCancel()));
+
+    initBaseProperty();
+    initRelayPorperty();
+    //遥控属性设置--{uuid}遥控
+    setWindowTitle(QStringLiteral("遥控属性设置"));
 }
 
 void HRelayPage::initBaseProperty()
@@ -75,6 +78,7 @@ void HRelayPage::initBaseProperty()
     ui->groupBox_9->setVisible(false);
     ui->groupBox_10->setVisible(false);
 
+
     //填充颜色
     strColor = "#000000"; //文字颜色
     strFillColor = QString("background-color:")+ strColor; //文字颜色
@@ -100,7 +104,7 @@ void HRelayPage::initBaseProperty()
     ui->alignPicCombo->setEnabled(false);
 
     //实际情况设置
-    if(pCurObj)
+  /*  if(pCurObj)
     {
         HTextObj* pTextObj = pCurObj->getIconSymbol()->getFirstTextObj();
         ui->textLineEdit->setText(pTextObj->getTextContent());
@@ -137,7 +141,7 @@ void HRelayPage::initBaseProperty()
         strFillColor = pCurObj->getFillColorName();
         strColor = QString("background-color:")+ strFillColor;
         ui->fillClrBtn->setStyleSheet(strColor);
-    }
+    }*/
 
 }
 
@@ -176,9 +180,9 @@ QIcon HRelayPage::createBrushStyleIcon(Qt::BrushStyle brushStyle)
 void HRelayPage::initRelayPorperty()
 {
     ui->listWidget->setViewMode(QListView::IconMode);
-    ui->listWidget->setIconSize(QSize(48,48));
+    ui->listWidget->setIconSize(QSize(45,45));
     ui->listWidget->setMovement(QListView::Static);
-    ui->listWidget->setMaximumWidth(60);
+    //ui->listWidget->setMaximumWidth(60);
     ui->listWidget->setSpacing(10);
     createIcons();
 }
@@ -188,15 +192,16 @@ void HRelayPage::createIcons()
     QListWidgetItem* operBtn = new QListWidgetItem(ui->listWidget);
     operBtn->setText(QStringLiteral("画面操作"));
     operBtn->setIcon(QIcon(":/images/picoperator.png"));
-    operBtn->setTextAlignment(Qt::AlignHCenter);
+    operBtn->setTextAlignment(Qt::AlignCenter);
     operBtn->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    ui->listWidget->insertItem(0,operBtn);
 
     QListWidgetItem* relayBtn = new QListWidgetItem(ui->listWidget);
     relayBtn->setText(QStringLiteral("遥控操作"));
     relayBtn->setIcon(QIcon(":/images/runcontrol.png"));
-    relayBtn->setTextAlignment(Qt::AlignHCenter);
+    relayBtn->setTextAlignment(Qt::AlignCenter);
     relayBtn->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
+    ui->listWidget->insertItem(1,relayBtn);
     connect(ui->listWidget,&QListWidget::currentItemChanged,this,&HRelayPage::changePage);
 
 }
@@ -221,7 +226,7 @@ void HRelayPage::onTextClrBtn_clicked()
 void HRelayPage::onFontBtn_clicked()
 {
     bool ok;
-    HTextObj* pTextObj = pCurObj->getIconSymbol()->getFirstTextObj();//获取文字信息
+    HText* pTextObj = pCurObj->getIconSymbol()->getFirstTextObj();//获取文字信息
     font.setFamily(pTextObj->getTextFontName());
     font.setPointSize(pTextObj->getPointSize());
     font.setWeight(pTextObj->getWeigth());
@@ -250,6 +255,8 @@ void HRelayPage::onNoFillRadio_clicked()
     ui->groupBox_7->setVisible(false);
     ui->groupBox_9->setVisible(false);
     ui->groupBox_10->setVisible(false);
+    ui->horizontalLayout_20->addItem(ui->verticalSpacer_6);
+
 }
 
 void HRelayPage::onClrFillRadio_clicked()
@@ -257,14 +264,18 @@ void HRelayPage::onClrFillRadio_clicked()
     ui->groupBox_7->setVisible(true);
     ui->groupBox_9->setVisible(true);
     ui->groupBox_10->setVisible(false);
+    ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
+    ui->horizontalLayout_19->addItem(ui->verticalSpacer_5);
 }
 
 void HRelayPage::onPicFillRadio_clicked()
 {
     ui->groupBox_7->setVisible(true);
-    ui->groupBox_9->setVisible(false);
+    ui->groupBox_9->setVisible(true);
     ui->groupBox_10->setVisible(true);
-    ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
+    ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
+    ui->horizontalLayout_19->removeItem(ui->verticalSpacer_5);
+    //ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
 }
 
 /*

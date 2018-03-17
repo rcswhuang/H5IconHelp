@@ -125,7 +125,7 @@ void HPropertyDlg::initBaseTab()
     if(pCurObj->getShapeType() == DRAWSHAPE::enumLine)
     {
         ui->objType->setText(QStringLiteral("直线"));
-        HLineObj* pObj = (HLineObj*)pCurObj;
+        HLine* pObj = (HLine*)pCurObj;
         QPointF p1 = pObj->getHeadPoint();
         QPointF p2 = pObj->getTailPoint();
         double dx = (p1.x() + p2.x())/2;
@@ -139,7 +139,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumRectangle)
     {
         ui->objType->setText(QStringLiteral("矩形"));
-        HRectObj* pObj = (HRectObj*)pCurObj;
+        HRectangle* pObj = (HRectangle*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -149,7 +149,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumEllipse)
     {
         ui->objType->setText(QStringLiteral("椭圆"));
-        HEllipseObj* pObj = (HEllipseObj*)pCurObj;
+        HEllipse* pObj = (HEllipse*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -159,7 +159,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumCircle)
     {
         ui->objType->setText(QStringLiteral("圆"));
-        HCircleObj* pObj = (HCircleObj*)pCurObj;
+        HCircle* pObj = (HCircle*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -169,7 +169,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolygon)
     {
         ui->objType->setText(QStringLiteral("多边形"));
-        HPolygonObj* pObj = (HPolygonObj*)pCurObj;
+        HPolygon* pObj = (HPolygon*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -179,7 +179,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolyline)
     {
         ui->objType->setText(QStringLiteral("折线"));
-        HPolylineObj* pObj = (HPolylineObj*)pCurObj;
+        HPolyline* pObj = (HPolyline*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -189,7 +189,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumArc)
     {
         ui->objType->setText(QStringLiteral("弧线"));
-        HArcObj* pObj = (HArcObj*)pCurObj;
+        HArc* pObj = (HArc*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -199,7 +199,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPie)
     {
         ui->objType->setText(QStringLiteral("饼型"));
-        HPieObj* pObj = (HPieObj*)pCurObj;
+        HPie* pObj = (HPie*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -209,7 +209,7 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumText)
     {
         ui->objType->setText(QStringLiteral("文字"));
-        HTextObj* pObj = (HTextObj*)pCurObj;
+        HText* pObj = (HText*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
@@ -254,7 +254,7 @@ void HPropertyDlg::initTextTab()
         DRAWSHAPE drawShape = pCurObj->getShapeType();
         if(drawShape == enumText)
         {
-            HTextObj* pTextObj = (HTextObj*)pCurObj;
+            HText* pTextObj = (HText*)pCurObj;
             ui->horizAlignComboBox->setCurrentIndex(ui->horizAlignComboBox->findData(pTextObj->getHorizontalAlign()));
             ui->vertiAlignComboBox->setCurrentIndex(ui->vertiAlignComboBox->findData(pTextObj->getVerticalAlign()));
             ui->layoutComboBox->setCurrentIndex(ui->layoutComboBox->findData(pTextObj->getLayout()));
@@ -390,7 +390,7 @@ void HPropertyDlg::initLineTab()
 
         if(drawShape == enumLine)
         {
-            HLineObj* pLineObj = (HLineObj*)pCurObj;
+            HLine* pLineObj = (HLine*)pCurObj;
             int curIndex = ui->lineStartArrow->findData(pLineObj->getArrowStart());
             ui->lineStartArrow->setCurrentIndex(curIndex);
             curIndex = ui->lineTailArrow->findData(pLineObj->getArrowEnd());
@@ -403,14 +403,14 @@ void HPropertyDlg::initLineTab()
         else if(pCurObj->getShapeType() == enumArc)
         {
             ui->bCloseCheck->setVisible(true);
-            HArcObj* pArcObj = (HArcObj*)pCurObj;
+            HArc* pArcObj = (HArc*)pCurObj;
             ui->startAngle->setValue(pArcObj->getStartAngle());
             ui->spanAngle->setValue(pArcObj->getSpanAngle());
             ui->bCloseCheck->setChecked(pArcObj->getCloseStatus());
         }
         else if(pCurObj->getShapeType() == enumPie)
         {
-            HPieObj* pPieObj = (HPieObj*)pCurObj;
+            HPie* pPieObj = (HPie*)pCurObj;
             ui->startAngle->setValue(pPieObj->getStartAngle());
             ui->spanAngle->setValue(pPieObj->getSpanAngle());
         }
@@ -680,7 +680,7 @@ void HPropertyDlg::ok_clicked()
     pCurObj->setYAxis(ui->yAxis->value());
     if(drawShape == enumLine)
     {
-        HLineObj* pLineObj = (HLineObj*)pCurObj;
+        HLine* pLineObj = (HLine*)pCurObj;
         pLineObj->setArrowStart(ui->lineStartArrow->currentData().toUInt());
         pLineObj->setArrowEnd(ui->lineTailArrow->currentData().toUInt());
         pLineObj->setArrowWidth(ui->arrowWidth->value());
@@ -688,7 +688,7 @@ void HPropertyDlg::ok_clicked()
     }
     else if(drawShape == enumArc)
     {
-        HArcObj* pArcObj = (HArcObj*)pCurObj;
+        HArc* pArcObj = (HArc*)pCurObj;
         pArcObj->setStartAngle(ui->startAngle->value());
         pArcObj->setSpanAngle(ui->spanAngle->value());
         pArcObj->setCloseStatus(false);
@@ -697,13 +697,13 @@ void HPropertyDlg::ok_clicked()
     }
     else if(drawShape == enumPie)
     {
-        HPieObj* pPieObj = (HPieObj*)pCurObj;
+        HPie* pPieObj = (HPie*)pCurObj;
         pPieObj->setStartAngle(ui->startAngle->value());
         pPieObj->setSpanAngle(ui->spanAngle->value());
     }
     else if(drawShape == enumText)
     {
-        HTextObj *pTextObj = (HTextObj*)pCurObj;
+        HText *pTextObj = (HText*)pCurObj;
         pTextObj->setHorizontalAlign(ui->horizAlignComboBox->currentData().toInt());
         pTextObj->setVerticalAlign(ui->vertiAlignComboBox->currentData().toInt());
         pTextObj->setLayout(ui->layoutComboBox->currentData().toUInt());

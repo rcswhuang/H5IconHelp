@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>447</height>
+    <width>409</width>
+    <height>477</height>
    </rect>
   </property>
   <property name="font">
@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="propertyTab">
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="baseTab">
       <attribute name="title">
@@ -48,7 +48,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="objName"/>
+               <widget class="QLineEdit" name="objName">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="horizontalSpacer">
@@ -76,6 +83,12 @@
               </item>
               <item>
                <widget class="QLabel" name="objType">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>无</string>
                 </property>
@@ -115,7 +128,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="xCoord"/>
+               <widget class="QDoubleSpinBox" name="xCoord">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_5">
@@ -125,7 +145,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="yCoord"/>
+               <widget class="QDoubleSpinBox" name="yCoord">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="horizontalSpacer_3">
@@ -152,7 +179,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="xCoord_width"/>
+               <widget class="QDoubleSpinBox" name="xCoord_width">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_6">
@@ -162,7 +196,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="yCoord_height"/>
+               <widget class="QDoubleSpinBox" name="yCoord_height">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="horizontalSpacer_4">
@@ -189,7 +230,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="x_rotate"/>
+               <widget class="QDoubleSpinBox" name="x_rotate">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="horizontalSpacer_5">
@@ -249,7 +297,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="horizAlignComboBox"/>
+               <widget class="QComboBox" name="horizAlignComboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_10">
@@ -259,7 +314,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="vertiAlignComboBox"/>
+               <widget class="QComboBox" name="vertiAlignComboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -273,7 +335,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="directComboBox"/>
+               <widget class="QComboBox" name="directComboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_12">
@@ -283,7 +352,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="layoutComboBox"/>
+               <widget class="QComboBox" name="layoutComboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -307,6 +383,12 @@
               </item>
               <item>
                <widget class="QPushButton" name="textFontBtn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -321,6 +403,12 @@
               </item>
               <item>
                <widget class="QPushButton" name="textColorBtn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -338,7 +426,14 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="textEdit"/>
+               <widget class="QLineEdit" name="textEdit">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -384,6 +479,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="lineColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -397,7 +498,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="lineWidth"/>
+             <widget class="QComboBox" name="lineWidth">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -411,7 +519,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="lineStyle"/>
+             <widget class="QComboBox" name="lineStyle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_19">
@@ -421,7 +536,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="lineCapStyle"/>
+             <widget class="QComboBox" name="lineCapStyle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -444,7 +566,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="lineStartArrow"/>
+             <widget class="QComboBox" name="lineStartArrow">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_21">
@@ -454,7 +583,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="lineTailArrow"/>
+             <widget class="QComboBox" name="lineTailArrow">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -468,7 +604,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="arrowWidth"/>
+             <widget class="QDoubleSpinBox" name="arrowWidth">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_23">
@@ -478,7 +621,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="arrowHeight"/>
+             <widget class="QDoubleSpinBox" name="arrowHeight">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -501,17 +651,31 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="startAngle"/>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_25">
-              <property name="text">
-               <string>起始角度：</string>
+             <widget class="QDoubleSpinBox" name="startAngle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="spanAngle"/>
+             <widget class="QLabel" name="label_25">
+              <property name="text">
+               <string>旋转角度：</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="spanAngle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -577,22 +741,36 @@
             <item>
              <widget class="QLabel" name="label_27">
               <property name="text">
-               <string>起始角度：</string>
+               <string>X轴弯曲度：</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="xAxis"/>
+             <widget class="QDoubleSpinBox" name="xAxis">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_26">
               <property name="text">
-               <string>起始角度：</string>
+               <string>Y轴弯曲度：</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="yAxis"/>
+             <widget class="QDoubleSpinBox" name="yAxis">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -703,7 +881,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="fillStyle"/>
+             <widget class="QComboBox" name="fillStyle">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_30">
@@ -714,6 +899,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="fillColor">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -731,7 +922,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="fillDirection"/>
+             <widget class="QComboBox" name="fillDirection">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_31">
@@ -741,7 +939,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="fillPercentage"/>
+             <widget class="QSpinBox" name="fillPercentage">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -757,10 +962,23 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
-             <widget class="QLineEdit" name="picLineEdit"/>
+             <widget class="QLineEdit" name="picLineEdit">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="picBtn">
+              <property name="maximumSize">
+               <size>
+                <width>30</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="text">
                <string>...</string>
               </property>
@@ -791,7 +1009,14 @@
              </spacer>
             </item>
             <item>
-             <widget class="QComboBox" name="alignPicCombo"/>
+             <widget class="QComboBox" name="alignPicCombo">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -806,6 +1031,12 @@
     <layout class="QHBoxLayout" name="horizontalLayout_25">
      <item>
       <widget class="QPushButton" name="noBtn">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
        <property name="text">
         <string>取消</string>
        </property>
@@ -826,6 +1057,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="okBtn">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
        <property name="text">
         <string>确定</string>
        </property>

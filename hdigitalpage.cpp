@@ -1,9 +1,6 @@
 ﻿#include "hdigitalpage.h"
 #include "ui_digitalpage.h"
-#include "hbaseobj.h"
-#include "hiconobj.h"
-#include "hiconrectobj.h"
-#include "hiconcomplexobj.h"
+#include "hiconsymbol.h"
 #include "hdynamicobj.h"
 #include "hstation.h"
 #include "hiconhelper.h"
@@ -17,14 +14,21 @@ HDigitalPage::HDigitalPage(QWidget *parent) :
 }
 
 HDigitalPage::HDigitalPage(HBaseObj* pObj,QWidget *parent)
-    :QDialog(parent)
+    :QDialog(parent),ui(new Ui::digitalPage)
 {
-   pCurObj = (HIconComplexObj*)pObj;
-   wStation = pCurObj->getDynamicObj()->getDBStation();
-   wPoint = pCurObj->getDynamicObj()->getDBPoint();
-   wAttrib = pCurObj->getDynamicObj()->getDBAttr();
-   connect(ui->stComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onStationCurrentIndexChanged(int)));
-   connect(ui->jgComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onIntervalCurrentIndexChanged(int)));
+    ui->setupUi(this);
+    pCurObj = (HIconObj*)pObj;
+    wStation = pCurObj->getDynamicObj()->getDBStation();
+    wPoint = pCurObj->getDynamicObj()->getDBPoint();
+    wAttrib = pCurObj->getDynamicObj()->getDBAttr();
+    connect(ui->okBtn,SIGNAL(clicked()),this,SLOT(onOk()));
+    connect(ui->cancelBtn,SIGNAL(clicked()),this,SLOT(onCancel()));
+
+    initBaseProper();
+    initDataProper();
+
+    //遥信属性设置--{uuid}红绿圆
+    setWindowTitle(QStringLiteral("遥信属性设置"));
 }
 
 HDigitalPage::~HDigitalPage()
@@ -34,6 +38,9 @@ HDigitalPage::~HDigitalPage()
 
 void HDigitalPage::initDataProper()
 {
+    connect(ui->stComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onStationCurrentIndexChanged(int)));
+    connect(ui->jgComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onIntervalCurrentIndexChanged(int)));
+
     //对厂站信息初始化
     ui->stComboBox->clear();
     QList<HStation*> stationList = HStationHelper::Instance()->getStationList();
@@ -55,34 +62,48 @@ void HDigitalPage::initDataProper()
 void HDigitalPage::initBaseProper()
 {
     //布局
-    ui->ptX->setText(QString("%1").arg(pCurObj->getOX(),0,'g',2));
-    ui->ptY->setText(QString("%1").arg(pCurObj->getOY(),0,'g',2));
+    ui->ptX->setText(QString("%1").arg(pCurObj->getOX()));
+    ui->ptY->setText(QString("%1").arg(pCurObj->getOY()));
     ui->ptWidth->setText(QString("%1").arg(pCurObj->getRectWidth(),0,'g',2));
     ui->ptHeight->setText(QString("%1").arg(pCurObj->getRectHeight(),0,'g',2));
     ui->ptRotate->setText(QString("%1").arg(pCurObj->getRotateAngle()));
 
     //图符 可以用hiconhelper操作
-    QIcon openIcon,closeIcon,wrongOpenIcon,wrongCloseIcon;
+    //QIcon openIcon,closeIcon,wrongOpenIcon,wrongCloseIcon;
     if(!pCurObj->iconTemplate() || !pCurObj->iconTemplate()->getSymbol())
         return;
+
+    QSizeF defaultSize = pCurObj->iconTemplate()->getDefaultSize();
+    QSizeF uiSize = QSizeF(40,40);
+    QSizeF sizeF = uiSize;
+    if(uiSize.width() > defaultSize.width())
+    {
+        sizeF.setWidth(defaultSize.width());
+        if(uiSize.height() > defaultSize.height())
+            sizeF.setHeight(defaultSize.height());
+    }
+    else
+    {
+        if(uiSize.height() > defaultSize.height())
+            sizeF.setHeight(defaultSize.height());
+    }
     HIconSymbol* pSymbol = pCurObj->iconTemplate()->getSymbol();
     pSymbol->setCurrentPattern(0);//分
     QString strType,strUuid;
     strType = pCurObj->getCatalogName();
     strUuid = pCurObj->getUuid();
-    QSizeF sizeF = QSizeF(ui->open->width()-2,ui->open->height()-2);
-    openIcon = QIcon(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,0));
-    ui->open->setIcon(openIcon);
-    sizeF = QSizeF(ui->close->width()-2,ui->close->height()-2);
-    closeIcon = QIcon(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,1));
-    ui->close->setIcon(closeIcon);
-    sizeF = QSizeF(ui->wrongOpen->width()-2,ui->wrongOpen->height()-2);
-    wrongOpenIcon = QIcon(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,2));
-    ui->wrongOpen->setIcon(wrongOpenIcon);
-    sizeF = QSizeF(ui->wrongClose->width()-2,ui->wrongClose->height()-2);
-    wrongCloseIcon = QIcon(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,3));
-    ui->wrongClose->setIcon(wrongCloseIcon);
-
+    //分
+    ui->open->setAlignment(Qt::AlignCenter);
+    ui->open->setPixmap(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,0));
+    //合
+    ui->close->setAlignment(Qt::AlignCenter);
+    ui->close->setPixmap(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,1));
+    //分错
+    ui->wrongOpen->setAlignment(Qt::AlignCenter);
+    ui->wrongOpen->setPixmap(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,2));
+    //合错
+    ui->wrongClose->setAlignment(Qt::AlignCenter);
+    ui->wrongClose->setPixmap(HIconHelper::Instance()->iconPixmap(strType,strUuid,sizeF,3));
 }
 
 void HDigitalPage::onStationCurrentIndexChanged(int index)
@@ -184,10 +205,16 @@ void HDigitalPage::setDigitalAttr(HDigital* pDigital)
 void HDigitalPage::onOk()
 {
     //主要就是保存点的数据
-    wStation = ui->stComboBox->currentData().toInt();
-    wPoint = ui->ptListWidget->currentItem()->data(Qt::UserRole).toInt();
-    pCurObj->getDynamicObj()->setDBStation(wStation);
-    pCurObj->getDynamicObj()->setDBPoint(wPoint);
+    if((int)-1 != ui->stComboBox->currentIndex())
+    {
+        wStation = ui->stComboBox->currentData().toInt();
+        pCurObj->getDynamicObj()->setDBStation(wStation);
+    }
+    if(NULL != ui->ptListWidget->currentItem())
+    {
+        wPoint = ui->ptListWidget->currentItem()->data(Qt::UserRole).toUInt();
+        pCurObj->getDynamicObj()->setDBPoint(wPoint);
+    }
     QDialog::accept();
 }
 
