@@ -5,6 +5,7 @@
 #include <QFontDialog>
 #include <QVariant>
 #include <QFile>
+#include <QFileDialog>
 #include <math.h>
 
 HPropertyDlg::HPropertyDlg(QWidget *parent) :
@@ -22,6 +23,7 @@ HPropertyDlg::HPropertyDlg(QWidget *parent) :
        qss.close();
     }*/
     //setStyleSheet();
+    setWindowTitle(QStringLiteral("设置图元属性"));
 
 }
 
@@ -61,36 +63,58 @@ void HPropertyDlg::initTab()
     initLineTab();
     initShapeTab();
     DRAWSHAPE drawShape = pCurObj->getShapeType();
+    ui->verticalLayout_18->setStretch(0,3);
+    ui->verticalLayout_18->setStretch(1,3);
+    ui->verticalLayout_18->setStretch(2,3);
+    ui->verticalLayout_18->setStretch(3,3);
+    ui->verticalLayout_18->setStretch(4,1);
     if(drawShape == enumText)
     {
         ui->groupBox_2->hide();
         ui->groupBox_8->hide();
-       //ui->propertyTab->removeTab(2);
-        ui->groupBox_10->move(ui->groupBox_2->x(),ui->groupBox_2->y());
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(1,3);
+        ui->verticalLayout_18->setStretch(4,7);
     }
     if(drawShape == enumLine)
-    {   
-        ui->propertyTab->removeTab(0);//文字
-        ui->propertyTab->removeTab(2);//形状
+    {
+        ui->propertyTab->removeTab(1);//文字
+        ui->propertyTab->removeTab(3);//形状
         ui->xCoord_width->setEnabled(false);
         ui->yCoord_height->setEnabled(false);
         ui->groupBox_8->hide();
-        ui->groupBox_8->hide();
         ui->groupBox_10->hide();
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(1,3);
+        ui->verticalLayout_18->setStretch(4,7);
     }
-    else if(drawShape == enumRectangle || drawShape == enumEllipse ||drawShape == enumCircle || drawShape == enumPolyline || drawShape == enumPolygon)
+    else if(drawShape == enumRectangle)
     {
-        ui->propertyTab->removeTab(0);//文字
+        ui->propertyTab->removeTab(1);//文字
         ui->groupBox_2->hide();
         ui->groupBox_8->hide();
-        ui->groupBox_10->move(ui->groupBox_2->x(),ui->groupBox_2->y());
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(3,3);
+        ui->verticalLayout_18->setStretch(4,7);
+    }
+    else if(drawShape == enumEllipse ||drawShape == enumCircle || drawShape == enumPolyline || drawShape == enumPolygon)
+    {
+        ui->propertyTab->removeTab(1);//文字
+        ui->groupBox_2->hide();
+        ui->groupBox_8->hide();
+        ui->groupBox_10->hide();
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(4,10);
+        //ui->verticalLayout_18->setStretch(4,7);
     }
     else if(drawShape == enumArc || drawShape == enumPie)
     {
-       ui->propertyTab->removeTab(0);//文字
+       ui->propertyTab->removeTab(1);//文字
        ui->groupBox_2->hide();
-       ui->groupBox_8->move(ui->groupBox_2->x(),ui->groupBox_2->y());
        ui->groupBox_10->hide();
+       ui->verticalLayout_18->setStretch(0,3);
+       ui->verticalLayout_18->setStretch(2,3);
+       ui->verticalLayout_18->setStretch(4,7);
     }
     else
     {
@@ -426,6 +450,7 @@ void HPropertyDlg::initShapeTab()
     connect(ui->fillDirection,SIGNAL(currentIndexChanged(int)),this,SLOT(fillDirection_clicked()));
     connect(ui->fillPercentage,SIGNAL(valueChanged(int)),this,SLOT(fillPercentage_clicked()));
     connect(btnGroup,SIGNAL(buttonClicked(int)),this,SLOT(btnGroup_clicked(int)));
+    connect(ui->picBtn,SIGNAL(clicked(bool)),this,SLOT(picBtn_clicked()));
     //边框可见
     ui->frameSee->setChecked(true);
 
@@ -479,6 +504,12 @@ void HPropertyDlg::initShapeTab()
     ui->fillDirection->addItem(QStringLiteral("垂直到里"),DIRECT_VER_TO_IN);
     ui->fillDirection->addItem(QStringLiteral("水平到里"),DIRECT_HORI_TO_IN);
     ui->fillDirection->setEnabled(false);
+
+    ui->alignPicCombo->addItem(QStringLiteral("左"),0);
+    ui->alignPicCombo->addItem(QStringLiteral("中"),1);
+    ui->alignPicCombo->addItem(QStringLiteral("右"),2);
+    ui->keepPicCheck->setChecked(false);
+    ui->alignPicCombo->setEnabled(false);
     //实际显示
     if(pCurObj)
     {
@@ -505,6 +536,15 @@ void HPropertyDlg::initShapeTab()
             ui->fillDirection->setEnabled(true);
             int nFillDirect = ui->fillDirection->findData(pCurObj->getFillDirection());
             ui->fillDirection->setCurrentIndex(nFillDirect);
+        }
+
+        //图片部分
+        ui->picLineEdit->setText(pCurObj->getImagePath());
+        ui->keepPicCheck->setChecked(pCurObj->getKeepImageRatio());
+        if(pCurObj->getKeepImageRatio())
+        {
+            ui->alignPicCombo->setEnabled(true);
+            ui->alignPicCombo->setCurrentIndex(ui->alignPicCombo->findData(pCurObj->getImageDirect()));
         }
     }
 }
@@ -675,9 +715,21 @@ void HPropertyDlg::ok_clicked()
     //quint8 tt = ui->fillDirection->currentData().toUInt();
     pCurObj->setFillDirection(ui->fillDirection->currentData().toUInt());
     pCurObj->setRotateAngle(ui->x_rotate->value());
-    pCurObj->setRound(ui->rectRound);
+    bool bRound = false;
+    if(ui->rectRound->checkState() == Qt::Checked)
+        bRound = true;
+    pCurObj->setRound(bRound);
     pCurObj->setXAxis(ui->xAxis->value());
     pCurObj->setYAxis(ui->yAxis->value());
+    if(btnGroup->checkedId() == 1)//当前是颜色填充就不能用画面填充，当前是图片填充且如果两种填充都有画面填充优于颜色填充
+        pCurObj->setImagePath("");
+    else
+        pCurObj->setImagePath(ui->picLineEdit->text());
+    bool bKeep = false;
+    if(ui->keepPicCheck->checkState() == Qt::Checked)
+        bKeep = true;
+    pCurObj->setKeepImageRatio(bKeep);
+    pCurObj->setImageDirect(ui->alignPicCombo->currentData().toUInt());
     if(drawShape == enumLine)
     {
         HLine* pLineObj = (HLine*)pCurObj;
@@ -726,15 +778,38 @@ void HPropertyDlg::no_clicked()
 
 void HPropertyDlg::btnGroup_clicked(int id)
 {
+    ui->verticalLayout_18->setStretch(0,3);
+    ui->verticalLayout_18->setStretch(1,2);
+    ui->verticalLayout_18->setStretch(2,3);
+    ui->verticalLayout_18->setStretch(3,3);
+    ui->verticalLayout_18->setStretch(4,1);
     if(id == 0)
     {
         ui->groupBox_6->setVisible(false);
         ui->groupBox_7->setVisible(false);
+        ui->groupBox_12->setVisible(false);
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(4,9);
     }
-    else
+    else if(id == 1)//图片填充
     {
         ui->groupBox_6->setVisible(true);
         ui->groupBox_7->setVisible(true);
+        ui->groupBox_12->setVisible(false);
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(1,2);
+        ui->verticalLayout_18->setStretch(2,3);
+        ui->verticalLayout_18->setStretch(4,4);
+    }
+    else if(id == 2)
+    {
+        ui->groupBox_6->setVisible(true);
+        ui->groupBox_7->setVisible(false);
+        ui->groupBox_12->setVisible(true);
+        ui->verticalLayout_18->setStretch(0,3);
+        ui->verticalLayout_18->setStretch(1,2);
+        ui->verticalLayout_18->setStretch(3,3);
+        ui->verticalLayout_18->setStretch(4,4);
     }
 }
 
@@ -764,6 +839,7 @@ void HPropertyDlg::fillWay_clicked()
     {
         ui->groupBox_6->setVisible(false);
         ui->groupBox_7->setVisible(false);
+        ui->groupBox_12->setVisible(false);
     }
 }
 
@@ -893,4 +969,16 @@ void HPropertyDlg::xAxis_clicked()
 void HPropertyDlg::yAxis_clicked()
 {
 
+}
+
+void HPropertyDlg::picBtn_clicked()
+{
+    static QString path;
+
+    QString fileName = QFileDialog::getOpenFileName(this,QStringLiteral("打开图片"),path,"Images(*.png *.jpg *.bmp)",NULL,    QFileDialog::DontUseNativeDialog);
+    if(!fileName.isEmpty() || !fileName.isNull())
+    {
+        ui->picLineEdit->setText(fileName);
+        //画面路径要保存
+    }
 }
