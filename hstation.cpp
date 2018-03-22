@@ -1,4 +1,7 @@
-﻿#include "hstation.h"
+﻿#if defined(_MSC_VER) &&(_MSC_VER >= 1600)
+#pragma execution_character_set("utf-8")
+#endif
+#include "hstation.h"
 #include "publicdata.h"
 
 ATTRINFO DgtAttrInfo[] =
@@ -69,7 +72,33 @@ HStationList::~HStationList()
 //加载厂站信息
 void HStationList::loadStation()
 {
+    FILEHANDLE fileHandle;
+    memset(&fileHandle,0,sizeof(FILEHANDLE));
+    DATAFILEHEADER dataFileHandle;
+    //厂站信息
+    openDB(FILE_TYPE_STATION);
+    loadDataFileHeader(FILE_TYPE_STATION,&dataFileHandle);
+    //int wStation = 0;
+    for(int i = 0 ; i < dataFileHandle.wTotal; i++)
+    {
+        HStation* pStation = new HStation;
+        if(!pStation)
+            break;
 
+        if ( false == loadDBRecord(FILE_TYPE_STATION, ++fileHandle.wStation, &pStation->station ) )
+        {
+            delete pStation;
+            pStation=NULL;
+            break;
+        }
+        if(false == pStation->loadData(fileHandle))
+        {
+            delete pStation;
+            pStation = NULL;
+            break;
+        }
+        pStationList.append(pStation);
+    }
 }
 
 //厂站ID获取厂站
@@ -169,7 +198,7 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
     wTotalDigital = station.wDigitalCounts;
     wTotalGroup = station.wEquipmentGroupCounts;
     wTotalRelay = station.wRelayCounts;
-/*
+
     //间隔
     if(wTotalGroup != 0)
     {
@@ -179,14 +208,14 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
             wTotalGroup = 0;
             return false;
         }
-        EQUIPMENTGROUP* pEquip;
+        EQUIPMENTGROUP pEquip;
         HGroup* group = pGroup;
         openDB(FILE_TYPE_EQUIPMENTGROUP);
         for(int i = 0; i < station.wEquipmentGroupCounts;i++,group++)
         {
-            loadDBRecord(FILE_TYPE_EQUIPMENTGROUP,++fileHandle.wEquipmentGroup,pEquip);
-            group->wNo = pEquip->wGroupID;
-            strncpy(group->szName,pEquip->szGroupName,PTNAMELEN-1);
+            loadDBRecord(FILE_TYPE_EQUIPMENTGROUP,++fileHandle.wEquipmentGroup,&pEquip);
+            group->wNo = pEquip.wGroupID;
+            qstrncpy(group->szName,pEquip.szGroupName,PTNAMELEN-1);
             group->szName[PTNAMELEN-1] = 0;
         }
     }
@@ -201,16 +230,16 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
             return false;
         }
         openDB(FILE_TYPE_ANALOGUE);
-        ANALOGUE* pAna;
+        ANALOGUE pAna;
         HAnalogue* ana = pAnalogue;
         for(int i = 0; i < station.wAnalogueCounts;i++,ana++)
         {
 
-            loadDBRecord(FILE_TYPE_ANALOGUE,++fileHandle.wAnalogue,pAna);
-            ana->wNo = pAna->wAnalogueID;
-            ana->btType = pAna->btAnalogueType;
-            ana->wGroupID = pAna->wGroupID;
-            strncpy(ana->szName,pAna->szAnalogueName,PTNAMELEN-1);
+            loadDBRecord(FILE_TYPE_ANALOGUE,++fileHandle.wAnalogue,&pAna);
+            ana->wNo = pAna.wAnalogueID;
+            ana->btType = pAna.btAnalogueType;
+            ana->wGroupID = pAna.wGroupID;
+            qstrncpy(ana->szName,pAna.szAnalogueName,PTNAMELEN-1);
             ana->szName[PTNAMELEN-1] = 0;
         }
     }
@@ -225,7 +254,7 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
             return false;
         }
         openDB(FILE_TYPE_DIGITAL);
-        DIGITAL* pDig;
+        DIGITAL* pDig = new DIGITAL;
         HDigital* digital = pDigital;
         for(int i = 0; i < station.wDigitalCounts;i++,digital++)
         {
@@ -233,8 +262,13 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
             loadDBRecord(FILE_TYPE_DIGITAL,++fileHandle.wDigital,pDig);
             digital->wNo = pDig->wDigitalID;
             digital->wGroupID = pDig->wGroupID;
-            strncpy(digital->szName,pDig->szDigitalName,PTNAMELEN-1);
+            qstrncpy(digital->szName,pDig->szDigitalName,PTNAMELEN-1);
             digital->szName[PTNAMELEN-1] = 0;
+        }
+        if(pDig)
+        {
+            delete pDig;
+            pDig = NULL;
         }
     }
 
@@ -248,19 +282,19 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
             return false;
         }
         openDB(FILE_TYPE_RELAY);
-        RELAY* Relay;
+        RELAY Relay;
         HRelay* relay = pRelay;
         for(int i = 0; i < station.wRelayCounts;i++,relay++)
         {
 
-            loadDBRecord(FILE_TYPE_RELAY,++fileHandle.wRelay,Relay);
-            relay->wNo = Relay->wNo;
-            relay->btType = Relay->btType;
-            strncpy(relay->szName,Relay->szName,PTNAMELEN-1);
+            loadDBRecord(FILE_TYPE_RELAY,++fileHandle.wRelay,&Relay);
+            relay->wNo = Relay.wNo;
+            relay->btType = Relay.btType;
+            qstrncpy(relay->szName,Relay.szName,PTNAMELEN-1);
             relay->szName[PTNAMELEN-1] = 0;
         }
     }
-    */
+
     return true;
 }
 

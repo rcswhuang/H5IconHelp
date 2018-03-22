@@ -31,7 +31,8 @@ SOURCES += \
         hanaloguepage.cpp \
         hdigitalpage.cpp \
         hrelaypage.cpp \
-        hiconproperty.cpp
+        hiconproperty.cpp \
+        hgraphpage.cpp
 
 HEADERS +=\
         ../include/hiconapi.h \
@@ -42,22 +43,25 @@ HEADERS +=\
         ../include/H5IconHelp/hanaloguepage.h \
         ../include/H5IconHelp/hdigitalpage.h \
         ../include/H5IconHelp/hrelaypage.h \
-        ../include/H5IconHelp/hiconproperty.h
+        ../include/H5IconHelp/hiconproperty.h \
+        ../include/H5IconHelp/hgraphpage.h
 		  
 FORMS += \
     UI/iconproperty.ui \
     UI/analoguepage.ui \
     UI/digitalpage.ui \
-    UI/relaypage.ui
+    UI/relaypage.ui \
+    UI/graphpage.ui
 
 unix{
 
-    LIBS += -L ../lib/ -lH5IconGui
+    LIBS += -L ../lib/ -lH5IconGui -ldatafile
 }
 
 win32{
    LIBS += \
-        ../lib/H5IconGui.lib
+        ../lib/H5IconGui.lib \
+        ../lib/datafile.lib
 }
 
 win32{

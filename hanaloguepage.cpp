@@ -64,7 +64,9 @@ void HAnaloguePage::initDataProperty()
         ui->stComboBox->addItem(QString(station->getName()),QVariant(station->getNo()));
     }
     if(wStation == (ushort)-1)
-        ui->stComboBox->setCurrentIndex(-1);//默认设置为0
+    {
+        ui->stComboBox->setCurrentIndex(0);//默认设置为0
+    }
     else
     {
         int index = ui->stComboBox->findData(wStation);
@@ -84,10 +86,15 @@ void HAnaloguePage::onStationCurrentIndexChanged(int index)
     {
         ui->jgComboBox->addItem(QString(pGroup->getName()),QVariant(pGroup->getNo()));
     }
-    if(wPoint != (ushort)-1)
+    if((ushort)-1 == wPoint)
+    {
+        ui->jgComboBox->setCurrentIndex(0);
+        ui->jgLineEdit->setText(ui->jgComboBox->currentText());
+    }
+    else
     {
         pGroup = pStation->getGroupByDigital(wPoint);
-        int index1 = ui->jgComboBox->findData(pGroup->getGroupID());
+        int index1 = ui->jgComboBox->findData(pGroup->getNo());
         ui->jgComboBox->setCurrentIndex(index1);
         ui->jgLineEdit->setText(pGroup->getName());
     }
@@ -105,7 +112,7 @@ void HAnaloguePage::onIntervalCurrentIndexChanged(int index)
     int curIndex = 0;
     for(int i = 0; i < wTotalAnalogue;i++,pAna++)
     {
-        if(!pAna && pAna->getGroupID() == groupID)
+        if(pAna && pAna->getGroupID() == groupID)
         {
             QListWidgetItem* item = new QListWidgetItem(QString(pAna->getName()),ui->ptListWidget);
             item->setData(Qt::UserRole,pAna->getNo());
@@ -116,9 +123,10 @@ void HAnaloguePage::onIntervalCurrentIndexChanged(int index)
     }
 
     ui->ptListWidget->setCurrentRow(curIndex);
-    ui->ptLineEdit->setText(ui->ptListWidget->currentItem()->text());
+    if(ui->ptListWidget->currentItem())
+        ui->ptLineEdit->setText(ui->ptListWidget->currentItem()->text());
     //ui->ptNameLineEdit->setText(ui->ptListWidget->currentItem()->text());
-    setAnaAttrib(pAna);
+    setAnaAttrib(pStation->findAnalogue(curIndex));
 }
 
 void HAnaloguePage::onListWidgetItemDoubleClicked(QListWidgetItem* item)
@@ -126,7 +134,7 @@ void HAnaloguePage::onListWidgetItemDoubleClicked(QListWidgetItem* item)
     if(!item) return;
     wPoint = item->data(Qt::UserRole).toUInt();
     QString strPointName = item->text();
-    ui->ptNameLineEdit->setText(strPointName);
+    //ui->ptNameLineEdit->setText(strPointName);
     ui->ptLineEdit->setText(strPointName);
 }
 
@@ -139,13 +147,13 @@ void HAnaloguePage::setAnaAttrib(HAnalogue* pAna)
     {
         ui->attrComboBox->addItem(QString(AnaAttrInfo[i].szName),AnaAttrInfo[i].wAttrib);
     }
+    ushort wAttrib = pCurObj->getDynamicObj()->getDBAttr();
     ui->attrComboBox->setCurrentIndex(ui->attrComboBox->findData(wAttrib));
 }
 
 //基本属性
 void HAnaloguePage::initBaseProperty()
 {
-
     connect(ui->fontBtn,SIGNAL(clicked(bool)),this,SLOT(fontBtn_clicked()));
     connect(ui->textClrBtn,SIGNAL(clicked(bool)),this,SLOT(textClrBtn_clicked()));
     connect(ui->bgClrBtn,SIGNAL(clicked(bool)),this,SLOT(bgClrBtn_clicked()));
@@ -232,7 +240,7 @@ void HAnaloguePage::initBaseProperty()
                 HAnalogue* pAna = pStation->getAnalogue(wPoint);
                 if(pAna)
                 {
-                    ui->ptNameLineEdit->setText(pAna->getName());
+                    //ui->ptNameLineEdit->setText(pAna->getName());
                     ui->ptLineEdit->setText(pAna->getName());
                 }
             }

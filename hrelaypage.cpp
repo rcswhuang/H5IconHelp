@@ -6,6 +6,7 @@
 #include <QColorDialog>
 #include <QFontDialog>
 #include "hiconsymbol.h"
+#include "hiconapi.h"
 
 HRelayPage::HRelayPage(QWidget *parent) :
     QDialog(parent),
@@ -104,44 +105,52 @@ void HRelayPage::initBaseProperty()
     ui->alignPicCombo->setEnabled(false);
 
     //实际情况设置
-  /*  if(pCurObj)
+    if(pCurObj)
     {
-        HTextObj* pTextObj = pCurObj->getIconSymbol()->getFirstTextObj();
-        ui->textLineEdit->setText(pTextObj->getTextContent());
-        strTextColor = pTextObj->getTextColorName(); //文字颜色
-        QString strColor = QString("background-color:")+ strTextColor;
-        ui->textClrBtn->setStyleSheet(strColor);
-        ui->seeFrameCheck->setChecked(pCurObj->getFrameSee());
-        quint8 id = pCurObj->getFillWay();
-        if(id == 0){
-            ui->noFillRadio->setChecked(true);
-            ui->groupBox_7->setVisible(false);
-            ui->groupBox_9->setVisible(false);
-            ui->groupBox_10->setVisible(false);
+        int nPointType = pCurObj->getObjType();
+        if(nPointType == TEMPLATE_TYPE_RELAY)
+        {
+            ui->tabWidget->removeTab(0);//遥控就不需要光敏点的设置
         }
-        else if(id == 1){
-            ui->clrFillRadio->setChecked(true);
-            ui->groupBox_7->setVisible(true);
-            ui->groupBox_9->setVisible(true);
-            ui->groupBox_10->setVisible(false);
-        }
-        else if(id == 2){
-            ui->picFillRadio->setChecked(true);
-            ui->groupBox_7->setVisible(true);
-            ui->groupBox_9->setVisible(false);
-            ui->groupBox_10->setVisible(true);
-            ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
-        }
-        //emit btnGroup->buttonClicked(id);
+        else
+        {
+            HText* pTextObj = pCurObj->getIconSymbol()->getFirstTextObj();
+            ui->textLineEdit->setText(pTextObj->getTextContent());
+            strTextColor = pTextObj->getTextColorName(); //文字颜色
+            QString strColor = QString("background-color:")+ strTextColor;
+            ui->textClrBtn->setStyleSheet(strColor);
+            ui->seeFrameCheck->setChecked(pCurObj->getFrameSee());
+            quint8 id = pCurObj->getFillWay();
+            if(id == 0){
+                ui->noFillRadio->setChecked(true);
+                ui->groupBox_7->setVisible(false);
+                ui->groupBox_9->setVisible(false);
+                ui->groupBox_10->setVisible(false);
+            }
+            else if(id == 1){
+                ui->clrFillRadio->setChecked(true);
+                ui->groupBox_7->setVisible(true);
+                ui->groupBox_9->setVisible(true);
+                ui->groupBox_10->setVisible(false);
+            }
+            else if(id == 2){
+                ui->picFillRadio->setChecked(true);
+                ui->groupBox_7->setVisible(true);
+                ui->groupBox_9->setVisible(false);
+                ui->groupBox_10->setVisible(true);
+                ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
+            }
+            //emit btnGroup->buttonClicked(id);
 
-        ui->transHSlider->setValue(pCurObj->getTransparency());
-        int nFillStyle = ui->fillStyleCombo->findData(int(pCurObj->getFillStyle()));
-        ui->fillStyleCombo->setCurrentIndex(nFillStyle);
+            ui->transHSlider->setValue(pCurObj->getTransparency());
+            int nFillStyle = ui->fillStyleCombo->findData(int(pCurObj->getFillStyle()));
+            ui->fillStyleCombo->setCurrentIndex(nFillStyle);
 
-        strFillColor = pCurObj->getFillColorName();
-        strColor = QString("background-color:")+ strFillColor;
-        ui->fillClrBtn->setStyleSheet(strColor);
-    }*/
+            strFillColor = pCurObj->getFillColorName();
+            strColor = QString("background-color:")+ strFillColor;
+            ui->fillClrBtn->setStyleSheet(strColor);
+        }
+    }
 
 }
 
@@ -255,7 +264,7 @@ void HRelayPage::onNoFillRadio_clicked()
     ui->groupBox_7->setVisible(false);
     ui->groupBox_9->setVisible(false);
     ui->groupBox_10->setVisible(false);
-    ui->horizontalLayout_20->addItem(ui->verticalSpacer_6);
+    //ui->horizontalLayout_20->addItem(ui->verticalSpacer_6);
 
 }
 
@@ -264,8 +273,8 @@ void HRelayPage::onClrFillRadio_clicked()
     ui->groupBox_7->setVisible(true);
     ui->groupBox_9->setVisible(true);
     ui->groupBox_10->setVisible(false);
-    ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
-    ui->horizontalLayout_19->addItem(ui->verticalSpacer_5);
+    //ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
+   // ui->horizontalLayout_19->addItem(ui->verticalSpacer_5);
 }
 
 void HRelayPage::onPicFillRadio_clicked()
@@ -273,8 +282,8 @@ void HRelayPage::onPicFillRadio_clicked()
     ui->groupBox_7->setVisible(true);
     ui->groupBox_9->setVisible(true);
     ui->groupBox_10->setVisible(true);
-    ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
-    ui->horizontalLayout_19->removeItem(ui->verticalSpacer_5);
+    //ui->horizontalLayout_20->removeItem(ui->verticalSpacer_6);
+    //ui->horizontalLayout_19->removeItem(ui->verticalSpacer_5);
     //ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
 }
 

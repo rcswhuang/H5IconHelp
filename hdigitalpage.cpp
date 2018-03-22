@@ -1,9 +1,15 @@
-﻿#include "hdigitalpage.h"
+﻿#if defined(_MSC_VER) &&(_MSC_VER >= 1600)
+#pragma execution_character_set("utf-8")
+#endif
+
+#include "hdigitalpage.h"
 #include "ui_digitalpage.h"
 #include "hiconsymbol.h"
 #include "hdynamicobj.h"
 #include "hstation.h"
 #include "hiconhelper.h"
+
+
 extern ATTRINFO DgtAttrInfo[];
 
 HDigitalPage::HDigitalPage(QWidget *parent) :
@@ -40,7 +46,7 @@ void HDigitalPage::initDataProper()
 {
     connect(ui->stComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onStationCurrentIndexChanged(int)));
     connect(ui->jgComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onIntervalCurrentIndexChanged(int)));
-
+    connect(ui->ptListWidget,SIGNAL(itemDoubleClicked(QListWidgetItem*)),this,SLOT(onPointList_clicked()));
     //对厂站信息初始化
     ui->stComboBox->clear();
     QList<HStation*> stationList = HStationHelper::Instance()->getStationList();
@@ -50,7 +56,10 @@ void HDigitalPage::initDataProper()
         ui->stComboBox->addItem(QString(station->getName()),QVariant(station->getNo()));
     }
     if(wStation == (ushort)-1)
-        ui->stComboBox->setCurrentIndex(-1);//默认设置为0
+    {
+        ui->stComboBox->setCurrentIndex(0);//默认设置为0
+        ui->stLineEdit->setText(ui->stComboBox->currentText());
+    }
     else
     {
         int index = ui->stComboBox->findData(wStation);
@@ -62,12 +71,12 @@ void HDigitalPage::initDataProper()
 void HDigitalPage::initBaseProper()
 {
     //布局
-    ui->ptX->setText(QString("%1").arg(pCurObj->getOX()));
-    ui->ptY->setText(QString("%1").arg(pCurObj->getOY()));
-    ui->ptWidth->setText(QString("%1").arg(pCurObj->getRectWidth(),0,'g',2));
-    ui->ptHeight->setText(QString("%1").arg(pCurObj->getRectHeight(),0,'g',2));
-    ui->ptRotate->setText(QString("%1").arg(pCurObj->getRotateAngle()));
-
+    ui->ptX->setText(QString("%1").arg(pCurObj->getOX(),0,'f',2));
+    ui->ptY->setText(QString("%1").arg(pCurObj->getOY(),0,'f',2));
+    ui->ptWidth->setText(QString("%1").arg(pCurObj->getRectWidth(),0,'f',2));
+    ui->ptHeight->setText(QString("%1").arg(pCurObj->getRectHeight(),0,'f',2));
+    ui->ptRotate->setText(QString("%1°").arg(pCurObj->getRotateAngle()));
+    //connect(ui->ptRotate,SIGNAL(),this,SLOT());
     //图符 可以用hiconhelper操作
     //QIcon openIcon,closeIcon,wrongOpenIcon,wrongCloseIcon;
     if(!pCurObj->iconTemplate() || !pCurObj->iconTemplate()->getSymbol())
@@ -120,11 +129,14 @@ void HDigitalPage::onStationCurrentIndexChanged(int index)
         ui->jgComboBox->addItem(QString(pGroup->getName()),QVariant(pGroup->getNo()));
     }
     if(wPoint == (ushort)-1)
+    {
         ui->jgComboBox->setCurrentIndex(0);
+        ui->jgLineEdit->setText(ui->jgComboBox->currentText());
+    }
     else
     {
         pGroup = pStation->getGroupByDigital(wPoint);
-        int index1 = ui->jgComboBox->findData(pGroup->getGroupID());
+        int index1 = ui->jgComboBox->findData(pGroup->getNo());
         ui->jgComboBox->setCurrentIndex(index1);
         ui->jgLineEdit->setText(pGroup->getName());
     }
@@ -142,7 +154,7 @@ void HDigitalPage::onIntervalCurrentIndexChanged(int index)
     int curIndex = 0;
     for(int i = 0; i < wTotalDigital;i++,pDigital++)
     {
-        if(!pDigital && pDigital->getGroupID() == groupID)
+        if(pDigital && pDigital->getGroupID() == groupID)
         {
             QListWidgetItem* item = new QListWidgetItem(QString(pDigital->getName()),ui->ptListWidget);
             item->setData(Qt::UserRole,pDigital->getNo());
@@ -153,8 +165,9 @@ void HDigitalPage::onIntervalCurrentIndexChanged(int index)
     }
 
     ui->ptListWidget->setCurrentRow(curIndex);
-    ui->ptLineEdit->setText(ui->ptListWidget->currentItem()->text());
-    setDigitalAttr(pDigital);
+    if(ui->ptListWidget->currentItem())
+        ui->ptLineEdit->setText(ui->ptListWidget->currentItem()->text());
+    setDigitalAttr(pStation->findDigital(curIndex));
 }
 
 void HDigitalPage::setDigitalAttr(HDigital* pDigital)
@@ -162,14 +175,14 @@ void HDigitalPage::setDigitalAttr(HDigital* pDigital)
     if(NULL == pDigital)
         return;
     ui->attrComboBox->clear();
-    ushort wAttrib = 0;
+    ushort wAttrib = pCurObj->getDynamicObj()->getDBAttr();
     for(int i = 0;DgtAttrInfo[i].szName != 0;i++)
     {
         if(ATTR_DGT_4_STATE_VALUE == DgtAttrInfo[i].wAttrib)
         {
             if((ushort)-1 != pDigital->getDoubleDNo())
             {
-                ui->attrComboBox->addItem(QString(DgtAttrInfo[i].szName),DgtAttrInfo[i].wAttrib);
+                ui->attrComboBox->addItem(QStringLiteral("%1").arg(DgtAttrInfo[i].szName),DgtAttrInfo[i].wAttrib);
                 if(pCurObj->getDynamicObj()->getDBAttr() != DgtAttrInfo[i].wAttrib)
                 {
                     wAttrib = DgtAttrInfo[i].wAttrib;
@@ -181,7 +194,8 @@ void HDigitalPage::setDigitalAttr(HDigital* pDigital)
         {
             if((ushort)-1 == pDigital->getDoubleDNo())
             {
-                ui->attrComboBox->addItem(QString(DgtAttrInfo[i].szName),DgtAttrInfo[i].wAttrib);
+
+                ui->attrComboBox->addItem(QStringLiteral("%1").arg(DgtAttrInfo[i].szName),DgtAttrInfo[i].wAttrib);
                 if(pCurObj->getDynamicObj()->getDBAttr() != DgtAttrInfo[i].wAttrib)
                 {
                     wAttrib = DgtAttrInfo[i].wAttrib;
@@ -191,7 +205,7 @@ void HDigitalPage::setDigitalAttr(HDigital* pDigital)
         }
         else
         {
-            ui->attrComboBox->addItem(QString(DgtAttrInfo[i].szName),DgtAttrInfo[i].wAttrib);
+            ui->attrComboBox->addItem(QStringLiteral("%1").arg(QString(DgtAttrInfo[i].szName)),DgtAttrInfo[i].wAttrib);
             if(pCurObj->getDynamicObj()->getDBAttr() != DgtAttrInfo[i].wAttrib)
             {
                 wAttrib = DgtAttrInfo[i].wAttrib;
@@ -200,6 +214,20 @@ void HDigitalPage::setDigitalAttr(HDigital* pDigital)
         }
     }
     ui->attrComboBox->setCurrentIndex(ui->attrComboBox->findData(wAttrib));
+}
+
+void HDigitalPage::onPointList_clicked()
+{
+    QListWidgetItem* pCurItem = ui->ptListWidget->currentItem();
+    if(!pCurItem) return;
+    ushort wNo = pCurItem->data(Qt::UserRole).toUInt();
+    int stationID = ui->stComboBox->itemData(ui->stComboBox->currentIndex()).toInt();
+    HStation *pStation = HStationHelper::Instance()->getStation(stationID);
+    if(NULL == pStation) return;
+    HDigital *pDigital = pStation->getDigital(wNo);
+    if(NULL == pDigital) return;
+    setDigitalAttr(pDigital);
+    ui->ptLineEdit->setText(pCurItem->text());
 }
 
 void HDigitalPage::onOk()
