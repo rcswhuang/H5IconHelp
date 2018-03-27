@@ -5,6 +5,7 @@
 #include <QButtonGroup>
 #include <QColorDialog>
 #include <QFontDialog>
+#include <QFileDialog>
 #include "hiconsymbol.h"
 #include "hiconapi.h"
 
@@ -45,9 +46,9 @@ void HRelayPage::initBaseProperty()
     connect(ui->fontBtn,&QPushButton::clicked,this,&HRelayPage::onFontBtn_clicked);
     connect(ui->moreBtn,&QPushButton::clicked,this,&HRelayPage::onMoreBtn_clicked);
     connect(ui->styleComboBox,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),this,&HRelayPage::onStyleCombo_clicked);
-    connect(ui->noFillRadio,&QRadioButton::clicked,this,&HRelayPage::onNoFillRadio_clicked);
-    connect(ui->clrFillRadio,&QRadioButton::clicked,this,&HRelayPage::onClrFillRadio_clicked);
-    connect(ui->picFillRadio,&QRadioButton::clicked,this,&HRelayPage::onPicFillRadio_clicked);
+    //connect(ui->noFillRadio,&QRadioButton::clicked,this,&HRelayPage::onNoFillRadio_clicked);
+    //connect(ui->clrFillRadio,&QRadioButton::clicked,this,&HRelayPage::onClrFillRadio_clicked);
+    //connect(ui->picFillRadio,&QRadioButton::clicked,this,&HRelayPage::onPicFillRadio_clicked);
     connect(ui->transHSlider,&QSlider::valueChanged,ui->transSpinBox,&QSpinBox::setValue);
     connect(ui->transSpinBox,static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),ui->transHSlider,&QSlider::setValue);
     //connect(ui->fillStyleCombo,static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),this,&HRelayPage::onFillStyleCombo_clicked);
@@ -70,14 +71,12 @@ void HRelayPage::initBaseProperty()
 
     /*************************填充设置*************************************/
     //填充方式
-    QButtonGroup* btnGroup = new QButtonGroup(this);
+    btnGroup = new QButtonGroup(this);
     btnGroup->addButton(ui->noFillRadio,0);
     btnGroup->addButton(ui->clrFillRadio,1);
     btnGroup->addButton(ui->picFillRadio,2);
     ui->noFillRadio->setChecked(true);
-    ui->groupBox_7->setVisible(false);
-    ui->groupBox_9->setVisible(false);
-    ui->groupBox_10->setVisible(false);
+    connect(btnGroup,SIGNAL(buttonClicked(int)),this,SLOT(btnGroup_clicked(int)));
 
 
     //填充颜色
@@ -101,6 +100,9 @@ void HRelayPage::initBaseProperty()
     }
 
     /***************************图片设置*************************************/
+    ui->alignPicCombo->addItem(QStringLiteral("左"),0);
+    ui->alignPicCombo->addItem(QStringLiteral("中"),1);
+    ui->alignPicCombo->addItem(QStringLiteral("右"),2);
     ui->keepPicCheck->setChecked(false);
     ui->alignPicCombo->setEnabled(false);
 
@@ -119,36 +121,42 @@ void HRelayPage::initBaseProperty()
             strTextColor = pTextObj->getTextColorName(); //文字颜色
             QString strColor = QString("background-color:")+ strTextColor;
             ui->textClrBtn->setStyleSheet(strColor);
-            ui->seeFrameCheck->setChecked(pCurObj->getFrameSee());
-            quint8 id = pCurObj->getFillWay();
+            ui->seeFrameCheck->setChecked(pTextObj->getFrameSee());
+            quint8 id = pTextObj->getFillWay();
             if(id == 0){
                 ui->noFillRadio->setChecked(true);
-                ui->groupBox_7->setVisible(false);
-                ui->groupBox_9->setVisible(false);
-                ui->groupBox_10->setVisible(false);
             }
             else if(id == 1){
                 ui->clrFillRadio->setChecked(true);
-                ui->groupBox_7->setVisible(true);
-                ui->groupBox_9->setVisible(true);
-                ui->groupBox_10->setVisible(false);
             }
             else if(id == 2){
                 ui->picFillRadio->setChecked(true);
-                ui->groupBox_7->setVisible(true);
-                ui->groupBox_9->setVisible(false);
-                ui->groupBox_10->setVisible(true);
-                ui->groupBox_10->move(ui->groupBox_9->x(),ui->groupBox_9->y());
-            }
-            //emit btnGroup->buttonClicked(id);
 
-            ui->transHSlider->setValue(pCurObj->getTransparency());
-            int nFillStyle = ui->fillStyleCombo->findData(int(pCurObj->getFillStyle()));
+            }
+            emit btnGroup->buttonClicked(id);
+
+            //字体设置
+            font.setFamily(pTextObj->getTextFontName());
+            font.setPointSize(pTextObj->getPointSize());
+            font.setWeight(pTextObj->getWeigth());
+            font.setItalic(pTextObj->getItalic());
+
+            ui->transHSlider->setValue(pTextObj->getTransparency());
+            int nFillStyle = ui->fillStyleCombo->findData(int(pTextObj->getFillStyle()));
             ui->fillStyleCombo->setCurrentIndex(nFillStyle);
 
-            strFillColor = pCurObj->getFillColorName();
+            strFillColor = pTextObj->getFillColorName();
             strColor = QString("background-color:")+ strFillColor;
             ui->fillClrBtn->setStyleSheet(strColor);
+
+            //图片部分
+            ui->picLineEdit->setText(pTextObj->getImagePath());
+            ui->keepPicCheck->setChecked(pTextObj->getKeepImageRatio());
+            if(pTextObj->getKeepImageRatio())
+            {
+                ui->alignPicCombo->setEnabled(true);
+                ui->alignPicCombo->setCurrentIndex(ui->alignPicCombo->findData(pTextObj->getImageDirect()));
+            }  
         }
     }
 
@@ -194,6 +202,39 @@ void HRelayPage::initRelayPorperty()
     //ui->listWidget->setMaximumWidth(60);
     ui->listWidget->setSpacing(10);
     createIcons();
+
+    //填充方式
+    relayGroup = new QButtonGroup(this);
+    relayGroup->addButton(ui->openGraphRadio,MODE_OPEN_GRAPH);
+    relayGroup->addButton(ui->picOperRadio,MODE_OPERATOR_GRAPH);
+    relayGroup->addButton(ui->relayRadio,MODE_RELAY_CONTROL);
+    ui->openGraphRadio->setChecked(true);
+    ui->groupBox->setEnabled(false);
+    ui->groupBox_2->setEnabled(true);
+    connect(relayGroup,SIGNAL(buttonClicked(int)),this,SLOT(relayGroup_clicked(int)));
+
+    //控制属性
+    if(pCurObj)
+    {
+        int nGraphID = pCurObj->getGraphID();
+        uchar btGraphOperator = pCurObj->getGraphOpeartor();
+        uchar btGraphComfirm = pCurObj->getGraphComfirm();
+        emit relayGroup->buttonClicked(btGraphOperator);
+
+        if(MODE_OPEN_GRAPH == btGraphOperator)//打开画面
+            ui->openPicCombo->setCurrentIndex(ui->openPicCombo->findData(nGraphID));
+        else if(MODE_OPERATOR_GRAPH == btGraphOperator)//打开画面模式
+        {
+            if(COMFIRM_MODE_STATION == btGraphComfirm)
+            {
+                ui->stationConfirmRadio->setChecked(true);
+            }
+            else if(COMFIRM_MODE_GRAPH == btGraphComfirm)
+            {
+                ui->graphComfirmRadio->setChecked(true);
+            }
+        }
+    }
 }
 
 void HRelayPage::createIcons()
@@ -258,6 +299,46 @@ void HRelayPage::onStyleCombo_clicked(int index)
 
 }
 
+void HRelayPage::btnGroup_clicked(int id)
+{
+    ui->verticalLayout_5->setStretch(0,3);
+    ui->verticalLayout_5->setStretch(1,3);
+    ui->verticalLayout_5->setStretch(2,2);
+    ui->verticalLayout_5->setStretch(3,3);
+    ui->verticalLayout_5->setStretch(4,3);
+    ui->verticalLayout_5->setStretch(5,1);
+    if(id == 0)
+    {
+        ui->groupBox_7->setVisible(false);
+        ui->groupBox_9->setVisible(false);
+        ui->groupBox_10->setVisible(false);
+        ui->verticalLayout_5->setStretch(0,3);
+        ui->verticalLayout_5->setStretch(1,3);
+        ui->verticalLayout_5->setStretch(5,9);
+    }
+    else if(id == 1)//图片填充
+    {
+        ui->groupBox_9->setVisible(true);
+        ui->groupBox_7->setVisible(true);
+        ui->groupBox_10->setVisible(false);
+        ui->verticalLayout_5->setStretch(0,3);
+        ui->verticalLayout_5->setStretch(1,3);
+        ui->verticalLayout_5->setStretch(2,2);
+        ui->verticalLayout_5->setStretch(3,3);
+        ui->verticalLayout_5->setStretch(5,4);
+    }
+    else if(id == 2)
+    {
+        ui->groupBox_7->setVisible(true);
+        ui->groupBox_9->setVisible(false);
+        ui->groupBox_10->setVisible(true);
+        ui->verticalLayout_5->setStretch(0,3);
+        ui->verticalLayout_5->setStretch(1,3);
+        ui->verticalLayout_5->setStretch(2,2);
+        ui->verticalLayout_5->setStretch(4,3);
+        ui->verticalLayout_5->setStretch(5,4);
+    }
+}
 
 void HRelayPage::onNoFillRadio_clicked()
 {
@@ -321,7 +402,14 @@ void HRelayPage::onFillClrBtn_clicked()
 //图片选择
 void HRelayPage::onPicSelect_clicked()
 {
+    static QString path = "/";
 
+    QString fileName = QFileDialog::getOpenFileName(this,QStringLiteral("打开图片"),path,"Images(*.png *.jpg *.bmp)",NULL,    QFileDialog::DontUseNativeDialog);
+    if(!fileName.isEmpty() || !fileName.isNull())
+    {
+        ui->picLineEdit->setText(fileName);
+        //画面路径要保存
+    }
 }
 
 //图片显示方式
@@ -331,3 +419,82 @@ void HRelayPage::onAlignPicCombo_clicked(int index)
 
 }
 */
+
+void HRelayPage::relayGroup_clicked(int id)
+{
+    if(id == 0) //打开画面
+    {
+        ui->groupBox->setEnabled(false);
+        ui->groupBox_2->setEnabled(true);
+
+    }
+    else if(id == 1) //画面操作
+    {
+        ui->groupBox->setEnabled(true);
+        ui->groupBox_2->setEnabled(false);
+    }
+    else if(id == 2)
+    {
+        ui->listWidget->setCurrentRow(1);
+        //emit ui->listWidget->currentItemChanged(ui->listWidget->item(1),ui->listWidget->item(0));
+    }
+}
+
+void HRelayPage::onOk()
+{
+    HText *pTextObj = (HText*)pCurObj->getIconSymbol()->getFirstTextObj();
+
+    //边框可见
+    bool bFrameSee = false;
+    if(ui->seeFrameCheck->checkState() == Qt::Checked)
+        bFrameSee = true;
+    pTextObj->setFrameSee(bFrameSee);
+
+    //填充方式
+    pTextObj->setFillWay(btnGroup->checkedId());
+    pTextObj->setFillStyle((Qt::BrushStyle)ui->fillStyleCombo->currentData().toUInt());
+    pTextObj->setFillColorName(strFillColor);
+
+    //填充字体和颜色
+    pTextObj->setTextFontName(font.family());
+    pTextObj->setPointSize(font.pointSize());
+    pTextObj->setWeight(font.weight());
+    pTextObj->setItalic(font.italic());
+    pTextObj->setTextColorName(strTextColor);
+    pTextObj->setTextContent(ui->textLineEdit->text());
+
+
+    if(btnGroup->checkedId() == 1)//当前是颜色填充就不能用画面填充，当前是图片填充且如果两种填充都有画面填充优于颜色填充
+        pTextObj->setImagePath("");
+    else
+        pTextObj->setImagePath(ui->picLineEdit->text());
+    bool bKeep = false;
+    if(ui->keepPicCheck->checkState() == Qt::Checked)
+        bKeep = true;
+    pTextObj->setKeepImageRatio(bKeep);
+    pTextObj->setImageDirect(ui->alignPicCombo->currentData().toUInt());
+
+    uchar btMode = relayGroup->checkedId();
+    if(MODE_OPEN_GRAPH == btMode)//打开画面
+        pCurObj->setGraphID(ui->openPicCombo->currentData().toUInt());
+    else if(MODE_OPERATOR_GRAPH == btMode)//打开画面模式
+    {
+        if(ui->stationConfirmRadio->isChecked())
+        {
+            pCurObj->setGraphComfirm(COMFIRM_MODE_STATION);
+        }
+        else if(ui->stationConfirmRadio->isChecked())
+        {
+            ui->graphComfirmRadio->setChecked(true);
+            pCurObj->setGraphComfirm(COMFIRM_MODE_GRAPH);
+        }
+        else
+            pCurObj->setGraphComfirm((uchar)-1);
+    }
+    QDialog::accept();
+}
+
+void HRelayPage::onCancel()
+{
+    QDialog::reject();
+}
