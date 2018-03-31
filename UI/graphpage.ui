@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HGraphPage</class>
- <widget class="QDialog" name="HGraphPage">
+ <class>graphPage</class>
+ <widget class="QDialog" name="graphPage">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -40,7 +40,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="graphNameLineEdit">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -50,7 +50,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="startCheckBox">
            <property name="text">
             <string>启动画面</string>
            </property>
@@ -68,7 +68,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox">
+          <widget class="QSpinBox" name="wSpinBox">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -85,7 +85,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_2">
+          <widget class="QSpinBox" name="hSpinBox">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -106,7 +106,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="bgClrBtn">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -114,7 +114,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -130,7 +130,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2">
+          <widget class="QLineEdit" name="picPathLineEdit">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -140,7 +140,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="picPathBtn">
            <property name="maximumSize">
             <size>
              <width>30</width>
@@ -164,7 +164,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="spinBox_3">
+          <widget class="QSpinBox" name="refreshSpinBox">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -207,7 +207,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_3">
+            <widget class="QLineEdit" name="stLineEdit">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -241,7 +241,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="typeComboBox">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -287,7 +287,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="cancleBtn">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -313,7 +313,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="okBtn">
        <property name="minimumSize">
         <size>
          <width>0</width>
