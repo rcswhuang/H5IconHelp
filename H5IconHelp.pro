@@ -32,7 +32,8 @@ SOURCES += \
         hdigitalpage.cpp \
         hrelaypage.cpp \
         hiconproperty.cpp \
-        hgraphpage.cpp
+        hgraphpage.cpp \
+        hgraph.cpp
 
 HEADERS +=\
         ../include/hiconapi.h \
@@ -44,7 +45,8 @@ HEADERS +=\
         ../include/H5IconHelp/hdigitalpage.h \
         ../include/H5IconHelp/hrelaypage.h \
         ../include/H5IconHelp/hiconproperty.h \
-        ../include/H5IconHelp/hgraphpage.h
+        ../include/H5IconHelp/hgraphpage.h \
+        ../include/H5IconHelp/hgraph.h
 		  
 FORMS += \
     UI/iconproperty.ui \
