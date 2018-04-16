@@ -492,7 +492,7 @@ HWord* HStation::getWord(quint8 btType)
     case TYPE_DIGITAL: return pDigital;
     case TYPE_SETPOINT: return pSetPoint;
     case TYPE_RELAY: return pRelay;
-    case TYPE_PLUSE : return pPulse;
+    case TYPE_PULSE : return pPulse;
     case TYPE_GROUP: return pGroup;
     }
     return NULL;
@@ -506,7 +506,7 @@ HWord* HStation::getWord(quint8 btType,quint8 wNo)
     case TYPE_DIGITAL: return getDigital(wNo);
     case TYPE_SETPOINT: return getSetPoint(wNo);
     case TYPE_RELAY: return getRelay(wNo);
-    case TYPE_PLUSE : return getPulse(wNo);
+    case TYPE_PULSE : return getPulse(wNo);
     case TYPE_GROUP: return getGroup(wNo);
     }
     return NULL;
