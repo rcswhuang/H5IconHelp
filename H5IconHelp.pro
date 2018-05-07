@@ -10,11 +10,11 @@ QT += widgets
 TARGET = H5IconHelp
 TEMPLATE = lib
 win32{
-    DESTDIR = $$(WF_ROOT)/lib
+    DESTDIR = ../lib
 }
 
 unix{
-DESTDIR = /users/huangw/lib
+DESTDIR = ../lib
 }
 DEFINES += H5ICONHELP_DLL
 
@@ -59,7 +59,7 @@ FORMS += \
 
 unix{
 
-    LIBS += -L ../lib/ -lH5IconGui -ldatafile
+    LIBS += -L ../lib -lH5IconGui -ldatafile
 }
 
 win32{
