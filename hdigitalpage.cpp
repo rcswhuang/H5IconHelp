@@ -242,6 +242,7 @@ void HDigitalPage::onOk()
     {
         wPoint = ui->ptListWidget->currentItem()->data(Qt::UserRole).toUInt();
         pCurObj->getDynamicObj()->setDBPoint(wPoint);
+        pCurObj->getDynamicObj()->setValueType(TYPE_DIGITAL);
     }
     QDialog::accept();
 }

@@ -307,8 +307,10 @@ void HAnaloguePage::onOk()
 {
     if((int)-1 != ui->stComboBox->currentIndex())
         pCurObj->getDynamicObj()->setDBStation(ui->stComboBox->currentData().toUInt());
-    if(NULL != ui->ptListWidget->currentItem())
+    if(NULL != ui->ptListWidget->currentItem()){
         pCurObj->getDynamicObj()->setDBPoint(ui->ptListWidget->currentItem()->data(Qt::UserRole).toUInt());
+        pCurObj->getDynamicObj()->setValueType(TYPE_ANALOGUE);
+    }
     if((int)-1 != ui->attrComboBox->currentIndex())
         pCurObj->getDynamicObj()->setDBAttr(ui->attrComboBox->currentData().toUInt());
 

@@ -348,7 +348,8 @@ void HGraph::Draw(QPainter* p)
 
 void HGraph::clear()
 {
-    for(int i = 0; i < pIconTemplateList.count();i++)
+    QList<HIconTemplate*>::iterator tempIt = pIconTemplateList.begin();
+    for(; tempIt < pIconTemplateList.end();tempIt++)
     {
         HIconTemplate* icontemp = (HIconTemplate*)pIconTemplateList.takeFirst();
         if(!icontemp) continue;
@@ -358,10 +359,11 @@ void HGraph::clear()
     pIconTemplateList.clear();
 
     //所有图元信息
-    for (int i = 0; i < pObjList.count();i++)
+    QList<HBaseObj*>::iterator objIt = pObjList.begin();
+    for (; objIt < pObjList.end();objIt++)
     {
         //HBaseObj的所有继承类都要virtual析构函数
-        HBaseObj* pObj = (HBaseObj*)pObjList[i];
+        HBaseObj* pObj = (HBaseObj*)pObjList.takeFirst();
         if(!pObj) continue;
         delete pObj;
         pObj = NULL;
@@ -400,7 +402,7 @@ void HGraph::copyTo(HGraph* graph)
         {
             HLine* pLineObj = new HLine;
             pObj->clone(pLineObj);
-            graph->addObj(pObj);
+            graph->addObj(pLineObj);
         }
         else if(pObj->getShapeType() == enumRectangle)
         {
