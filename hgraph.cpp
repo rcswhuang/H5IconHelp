@@ -359,10 +359,8 @@ void HGraph::clear()
     pIconTemplateList.clear();
 
     //所有图元信息
-    QList<HBaseObj*>::iterator objIt = pObjList.begin();
-    for (; objIt < pObjList.end();objIt++)
+    while(!pObjList.isEmpty())
     {
-        //HBaseObj的所有继承类都要virtual析构函数
         HBaseObj* pObj = (HBaseObj*)pObjList.takeFirst();
         if(!pObj) continue;
         delete pObj;
