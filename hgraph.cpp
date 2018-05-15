@@ -16,6 +16,7 @@ HGraph::HGraph(const QString& name)
     bModify = false;
     bStart = false;
     btType = 0;
+    nGraphID = (int)-1;
 }
 
 HGraph::~HGraph()

@@ -8,7 +8,7 @@
 #include <QFileDialog>
 #include "hiconsymbol.h"
 #include "hiconapi.h"
-
+#include "hgraphhelper.h"
 HRelayPage::HRelayPage(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::relayPage)
@@ -19,6 +19,10 @@ HRelayPage::HRelayPage(QWidget *parent) :
 HRelayPage::~HRelayPage()
 {
     delete ui;
+    while(m_pGraphList.isEmpty())
+    {
+        delete (HGraph*)m_pGraphList.takeFirst();
+    }
 }
 
 HRelayPage::HRelayPage(HBaseObj* pObj,QWidget *parent):
@@ -159,7 +163,6 @@ void HRelayPage::initBaseProperty()
             }  
         }
     }
-
 }
 
 QIcon HRelayPage::createBrushStyleIcon(Qt::BrushStyle brushStyle)
@@ -212,6 +215,18 @@ void HRelayPage::initRelayPorperty()
     ui->groupBox->setEnabled(false);
     ui->groupBox_2->setEnabled(true);
     connect(relayGroup,SIGNAL(buttonClicked(int)),this,SLOT(relayGroup_clicked(int)));
+
+    //获取画面
+    loadAllGraph();
+    ui->openPicCombo->addItem("",(int)-1);
+    for(int i = 0; i < m_pGraphList.count();i++)
+    {
+        HGraph* pGraph = (HGraph*)m_pGraphList[i];
+        if(!pGraph) continue;
+        QString strGraphName = pGraph->getGraphName();
+        int nGraphID = pGraph->getGraphID();
+        ui->openPicCombo->addItem(strGraphName,QVariant(nGraphID));
+    }
 
     //控制属性
     if(pCurObj)
@@ -422,22 +437,27 @@ void HRelayPage::onAlignPicCombo_clicked(int index)
 
 void HRelayPage::relayGroup_clicked(int id)
 {
-    if(id == 0) //打开画面
+    if(id == MODE_OPEN_GRAPH) //打开画面
     {
         ui->groupBox->setEnabled(false);
         ui->groupBox_2->setEnabled(true);
 
     }
-    else if(id == 1) //画面操作
+    else if(id == MODE_OPERATOR_GRAPH) //画面操作
     {
         ui->groupBox->setEnabled(true);
         ui->groupBox_2->setEnabled(false);
     }
-    else if(id == 2)
+    else if(id == MODE_RELAY_CONTROL)
     {
         ui->listWidget->setCurrentRow(1);
         //emit ui->listWidget->currentItemChanged(ui->listWidget->item(1),ui->listWidget->item(0));
     }
+}
+
+void HRelayPage::loadAllGraph()
+{
+    HGraphHelper::Instance()->loadAllGraph(&m_pGraphList);
 }
 
 void HRelayPage::onOk()
@@ -476,7 +496,9 @@ void HRelayPage::onOk()
 
     uchar btMode = relayGroup->checkedId();
     if(MODE_OPEN_GRAPH == btMode)//打开画面
-        pCurObj->setGraphID(ui->openPicCombo->currentData().toUInt());
+    {
+        pCurObj->setGraphID(ui->openPicCombo->currentData().toInt());
+    }
     else if(MODE_OPERATOR_GRAPH == btMode)//打开画面模式
     {
         if(ui->stationConfirmRadio->isChecked())
