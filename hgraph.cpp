@@ -585,6 +585,16 @@ void HGraph::removeObj(HBaseObj* pObj)
     pObjList.removeOne(pObj);
 }
 
+void HGraph::delObj(HBaseObj *pObj)
+{
+    if(!pObj) return;
+    if(pObjList.removeOne(pObj))
+    {
+        delete pObj;
+        pObj = NULL;
+    }
+}
+
 QList<HBaseObj*> HGraph::getObjList()
 {
     return pObjList;
