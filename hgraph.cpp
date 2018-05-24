@@ -451,6 +451,13 @@ void HGraph::copyTo(HGraph* graph)
             pObj->clone(pTextObj);
             graph->addObj(pTextObj);
         }
+        else if(pObj->getShapeType() == enumGroup)
+        {
+            HIconTemplate* icontemp = graph->findIconTemplate(QUuid(pObj1->getUuid()));
+            HGroupObj* pGroupObj = new HGroupObj(icontemp->getSymbol());
+            pObj->clone(pGroupObj);
+            sp->addObj(pGroupObj);
+        }
         else if(pObj->getShapeType() == enumComplex)
         {
             HIconObj* pObj1 = (HIconObj*)pObj;
@@ -485,6 +492,8 @@ HBaseObj* HGraph::newObj(QString tagName,const QString &strUuid)
         drawShape = enumText;
     else if(tagName == "Polygon")
         drawShape = enumPolygon;
+    else if(tagName ==  "Group")
+        drawShape = enumGroup;
     else if(tagName == "WfPointObj")
         drawShape = enumComplex;
     return newObj(drawShape,strUuid);
@@ -528,6 +537,11 @@ HBaseObj* HGraph::newObj(int nObjType,const QString &strUuid)
     else if(nObjType == enumText)
     {
         pObj = new HText();
+    }
+    else if(nObjType == enumGroup)
+    {
+        HIconTemplate* icontemp = findIconTemplate(QUuid(strUuid));
+        pObj = new HGroupObj(icontemp->getSymbol());
     }
     else if(nObjType == enumComplex)
     {

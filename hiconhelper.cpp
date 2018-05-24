@@ -94,7 +94,6 @@ void HIconHelper::loadIconDoucument(QList<HIconTemplate*> *pIconTemplateList)
         if(info.isFile())continue;
         QString strChildFilePath = iconsPath + "/" + info.fileName();
         loadIconTemplateFile(pIconTemplateList,strChildFilePath);
-
     }
 }
 
