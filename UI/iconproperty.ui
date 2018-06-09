@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="baseTab">
     <attribute name="title">
@@ -227,7 +227,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,10,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,3,1,1,1">
             <item>
              <widget class="QLabel" name="label_8">
               <property name="text">
@@ -242,6 +242,20 @@
                 <width>0</width>
                 <height>25</height>
                </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="horizontalFlip">
+              <property name="text">
+               <string>水平翻转</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="verticalFlip">
+              <property name="text">
+               <string>垂直翻转</string>
               </property>
              </widget>
             </item>

@@ -137,110 +137,93 @@ void HPropertyDlg::initBaseTab()
     ui->yCoord_height->setMaximum(9999.99);
 
     //角度
-    ui->x_rotate->setMinimum(0);
+    ui->x_rotate->setMinimum(-360);
     ui->x_rotate->setMaximum(360);
     ui->x_rotate->setSuffix(QStringLiteral("°"));
     ui->x_rotate->setValue(0);
+    ui->objName->setText("");
+    ui->objType->setText("无");
 
-    QString strObjName = pCurObj->getObjName();
-    ui->objName->setText(strObjName);
+    if(pCurObj)
+    {
+        QString strObjName = pCurObj->getObjName();
+        ui->objName->setText(strObjName);
+        ui->x_rotate->setValue(pCurObj->getRotateAngle());
+        ui->xCoord->setValue(pCurObj->getOX());
+        ui->yCoord->setValue(pCurObj->getOY());
+        ui->horizontalFlip->setChecked(pCurObj->bHorizonTurn);
+        ui->verticalFlip->setChecked(pCurObj->bVerticalTurn);
 
+        if(pCurObj->getShapeType() == DRAWSHAPE::enumLine)
+        {
+            ui->objType->setText(QStringLiteral("直线"));
+            HLine* pObj = (HLine*)pCurObj;
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumRectangle)
+        {
+            ui->objType->setText(QStringLiteral("矩形"));
+            HRectangle* pObj = (HRectangle*)pCurObj;
 
-    if(pCurObj->getShapeType() == DRAWSHAPE::enumLine)
-    {
-        ui->objType->setText(QStringLiteral("直线"));
-        HLine* pObj = (HLine*)pCurObj;
-        QPointF p1 = pObj->getHeadPoint();
-        QPointF p2 = pObj->getTailPoint();
-        double dx = (p1.x() + p2.x())/2;
-        double dy = (p1.y() + p2.y())/2;
-        QLineF lineF(p1,p2);
-        double angleLine = lineF.angle();
-        ui->x_rotate->setValue(angleLine);
-        ui->xCoord->setValue(dx);
-        ui->yCoord->setValue(dy);
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumRectangle)
-    {
-        ui->objType->setText(QStringLiteral("矩形"));
-        HRectangle* pObj = (HRectangle*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumEllipse)
-    {
-        ui->objType->setText(QStringLiteral("椭圆"));
-        HEllipse* pObj = (HEllipse*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumCircle)
-    {
-        ui->objType->setText(QStringLiteral("圆"));
-        HCircle* pObj = (HCircle*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolygon)
-    {
-        ui->objType->setText(QStringLiteral("多边形"));
-        HPolygon* pObj = (HPolygon*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->width);
-        ui->yCoord_height->setValue(pObj->height);
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolyline)
-    {
-        ui->objType->setText(QStringLiteral("折线"));
-        HPolyline* pObj = (HPolyline*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->width);
-        ui->yCoord_height->setValue(pObj->height);
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumArc)
-    {
-        ui->objType->setText(QStringLiteral("弧线"));
-        HArc* pObj = (HArc*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumPie)
-    {
-        ui->objType->setText(QStringLiteral("饼型"));
-        HPie* pObj = (HPie*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
-    else if(pCurObj->getShapeType() == DRAWSHAPE::enumText)
-    {
-        ui->objType->setText(QStringLiteral("文字"));
-        HText* pObj = (HText*)pCurObj;
-        ui->x_rotate->setValue(pObj->getRotateAngle());
-        ui->xCoord->setValue(pObj->getOX());
-        ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->getRectWidth());
-        ui->yCoord_height->setValue(pObj->getRectHeight());
-    }
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumEllipse)
+        {
+            ui->objType->setText(QStringLiteral("椭圆"));
+            HEllipse* pObj = (HEllipse*)pCurObj;
 
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumCircle)
+        {
+            ui->objType->setText(QStringLiteral("圆"));
+            HCircle* pObj = (HCircle*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolygon)
+        {
+            ui->objType->setText(QStringLiteral("多边形"));
+            HPolygon* pObj = (HPolygon*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->width);
+            ui->yCoord_height->setValue(pObj->height);
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolyline)
+        {
+            ui->objType->setText(QStringLiteral("折线"));
+            HPolyline* pObj = (HPolyline*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->width);
+            ui->yCoord_height->setValue(pObj->height);
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumArc)
+        {
+            ui->objType->setText(QStringLiteral("弧线"));
+            HArc* pObj = (HArc*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumPie)
+        {
+            ui->objType->setText(QStringLiteral("饼型"));
+            HPie* pObj = (HPie*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumText)
+        {
+            ui->objType->setText(QStringLiteral("文字"));
+            HText* pObj = (HText*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->getRectWidth());
+            ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+    }
 }
 
 void HPropertyDlg::initTextTab()
@@ -702,7 +685,18 @@ void HPropertyDlg::ok_clicked()
     pCurObj->setLineWidth(ui->lineWidth->currentData().toUInt());
     pCurObj->setLineStyle(Qt::PenStyle(ui->lineStyle->currentData().toInt()));
     pCurObj->setLineCapStyle(Qt::PenCapStyle(ui->lineCapStyle->currentData().toInt()));
-
+    bool bTurn = false;
+    if(ui->verticalFlip->checkState() == Qt::Checked)
+    {
+        bTurn = true;
+        pCurObj->setTurn(false,bTurn);
+    }
+    bTurn = false;
+    if(ui->horizontalFlip->checkState() == Qt::Checked)
+    {
+        bTurn = true;
+        pCurObj->setTurn(bTurn,false);
+    }
     bool bFrameSee = false;
     if(ui->frameSee->checkState() == Qt::Checked)
         bFrameSee = true;
