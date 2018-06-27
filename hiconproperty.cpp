@@ -1,4 +1,8 @@
-﻿#include "hiconproperty.h"
+﻿#if defined(_MSC_VER) &&(_MSC_VER >= 1600)
+#pragma execution_character_set("utf-8")
+#endif
+
+#include "hiconproperty.h"
 #include "ui_iconproperty.h"
 #include "hiconapi.h"
 #include <QColorDialog>
@@ -23,7 +27,7 @@ HPropertyDlg::HPropertyDlg(QWidget *parent) :
        qss.close();
     }*/
     //setStyleSheet();
-    setWindowTitle(QStringLiteral("设置图元属性"));
+    setWindowTitle(QStringLiteral("test1"));
 
 }
 
@@ -116,9 +120,11 @@ void HPropertyDlg::initTab()
        ui->verticalLayout_18->setStretch(2,3);
        ui->verticalLayout_18->setStretch(4,7);
     }
-    else
+    else if(drawShape == enumGroup)
     {
-
+        ui->propertyTab->removeTab(3);
+        ui->propertyTab->removeTab(2);
+        ui->propertyTab->removeTab(1);
     }
 }
 
@@ -222,6 +228,14 @@ void HPropertyDlg::initBaseTab()
 
             ui->xCoord_width->setValue(pObj->getRectWidth());
             ui->yCoord_height->setValue(pObj->getRectHeight());
+        }
+        else if(pCurObj->getShapeType() == DRAWSHAPE::enumGroup)
+        {
+            ui->objType->setText(QStringLiteral("组合"));
+            HGroupObj* pObj = (HGroupObj*)pCurObj;
+
+            ui->xCoord_width->setValue(pObj->getGroupWidth());
+            ui->yCoord_height->setValue(pObj->getGroupHeight());
         }
     }
 }
