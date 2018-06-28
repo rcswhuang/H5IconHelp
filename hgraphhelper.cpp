@@ -173,6 +173,35 @@ void HGraphHelper::saveAllGraph(QList<HGraph*> *pGraphList,HGraph* pCurGraph)
     }
 }
 
+void HGraphHelper::saveGraph(HGraph* graph)
+{
+    QString graphsPath = QString(getenv("wfsystem_dir"));;
+#ifdef WIN32
+    graphsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+#else
+    iconsPath = "/users/huangw";
+#endif
+    graphsPath.append("/graph");
+    QDir dirIconsPath(graphsPath);
+    if(!dirIconsPath.exists()) //---huangw 只能上层路径创建子文件夹
+        dirIconsPath.mkdir(graphsPath);
+
+    QString strGraphPath = graphsPath + "/" +graph->getGraphName();
+    if(!QDir(strGraphPath).exists())
+    {
+       if(!QDir(graphsPath).mkdir(strGraphPath))
+           return;
+    }
+
+    QString strFileName = strGraphPath + "/" +  "0.grf";
+    //如果有文件存在 就删除
+    if(QFile::exists(strFileName))
+    {
+        QFile::remove(strFileName);
+    }
+    graph->writeXmlFile(strFileName);
+}
+
 void HGraphHelper::saveGraph(HGraph* graph,QString& path,HGraph* pCurGraph)
 {
     if(NULL == graph)

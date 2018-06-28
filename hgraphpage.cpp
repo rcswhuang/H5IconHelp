@@ -1,4 +1,7 @@
-﻿#include "hgraphpage.h"
+﻿#if defined(_MSC_VER) &&(_MSC_VER >= 1600)
+#pragma execution_character_set("utf-8")
+#endif
+#include "hgraphpage.h"
 #include "ui_graphpage.h"
 #include "hstation.h"
 #include "hgraph.h"
@@ -17,9 +20,8 @@ HGraphPage::HGraphPage(HGraph* graph,QWidget *parent):
 {
     ui->setupUi(this);
     pGraph = graph;
-    //graphInfo = NULL;
-    //copyGraphInfo(pGraphInfo);
     initGraphInfo();
+    setWindowTitle("设置画面属性");
 }
 
 
@@ -70,12 +72,13 @@ void HGraphPage::initGraphInfo()
     ui->typeComboBox->addItem(QStringLiteral("接线图"),1);
     ui->typeComboBox->addItem(QStringLiteral("其他图"),2);
     ui->typeComboBox->setCurrentIndex(0);
-    QString strColor = "#000000"; //文字颜色
-    ui->bgClrBtn->setStyleSheet(QString("background-color:")+ strColor);
+    QString strColor = QString("background-color:")+ QString("#000000"); //文字颜色
+    ui->bgClrBtn->setStyleSheet(strColor);
     ui->refreshSpinBox->setRange(500,15000);
     ui->refreshSpinBox->setValue(3000);
     if(pGraph)
     {
+        pGraph->setModify(true);
         ui->graphNameLineEdit->setText(pGraph->getGraphName());
         ui->startCheckBox->setChecked(pGraph->getStartFlag());
         ui->wSpinBox->setValue(pGraph->getGraphWidth());
