@@ -10,6 +10,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
+#include "publicdata.h"
+
 HGraphHelper::HGraphHelper()
 {
 
@@ -28,14 +30,12 @@ HGraphHelper* HGraphHelper::Instance()
 
 void HGraphHelper::loadIconTemplate(QList<HIconTemplate*> *pIconTemplateList)
 {
+    if(NULL == pIconTemplateList)
+        return;
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath  = QString(qgetenv("wfsystem_dir"));
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/icons");
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
 
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
@@ -74,14 +74,12 @@ void HGraphHelper::loadIconTemplateFile(QList<HIconTemplate*> *pIconTemplateList
 
 void HGraphHelper::loadAllGraph(QList<HGraph*> *pGraphList)
 {
+    if(NULL == pGraphList)
+        return;
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath  = QString(qgetenv("wfsystem_dir"));
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/graph");
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
 
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
@@ -113,15 +111,13 @@ void HGraphHelper::loadAllGraph(QList<HGraph*> *pGraphList)
 
 void HGraphHelper::saveAllGraph(QList<HGraph*> *pGraphList,HGraph* pCurGraph)
 {
-    QString graphsPath = QString(getenv("wfsystem_dir"));;
-#ifdef WIN32
-    graphsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    graphsPath.append("/graph");
+    if(NULL == pGraphList || NULL == pCurGraph)
+        return;
+    char szGraphPath[128];
+    getDataFilePath(DFPATH_GRAPH,szGraphPath);
+    QString graphsPath = QString(szGraphPath);
     QDir dirIconsPath(graphsPath);
-    if(!dirIconsPath.exists()) //---huangw 只能上层路径创建子文件夹
+    if(!dirIconsPath.exists())
         dirIconsPath.mkdir(graphsPath);
 
     //先扫描一下当前文件夹内所有的画面名称
@@ -175,15 +171,13 @@ void HGraphHelper::saveAllGraph(QList<HGraph*> *pGraphList,HGraph* pCurGraph)
 
 void HGraphHelper::saveGraph(HGraph* graph)
 {
-    QString graphsPath = QString(getenv("wfsystem_dir"));;
-#ifdef WIN32
-    graphsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    graphsPath.append("/graph");
+    if(NULL == graph)
+        return;
+    char szGraphPath[128];
+    getDataFilePath(DFPATH_GRAPH,szGraphPath);
+    QString graphsPath = QString(szGraphPath);
     QDir dirIconsPath(graphsPath);
-    if(!dirIconsPath.exists()) //---huangw 只能上层路径创建子文件夹
+    if(!dirIconsPath.exists())
         dirIconsPath.mkdir(graphsPath);
 
     QString strGraphPath = graphsPath + "/" +graph->getGraphName();

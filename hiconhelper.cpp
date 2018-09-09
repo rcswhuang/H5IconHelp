@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
+#include "publicdata.h"
 HIconHelper::HIconHelper()
 {
 
@@ -27,14 +28,9 @@ QPixmap HIconHelper::iconPixmap(const QString& strType,const QString& uuid,const
     HIconTemplate* pIconTemplate = new HIconTemplate(QString());
     Q_ASSERT( pIconTemplate );
 
-    QString iconsPath  = QString(qgetenv("wfsystem_dir"));
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/icons");
-
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
     QString path = iconsPath +"/" + strType + "/" + uuid + ".xic";
     if ( uuid.isEmpty() && strType.contains(".xic") )
     {
@@ -77,13 +73,11 @@ QPixmap HIconHelper::iconPixmap(const QString& strType,const QString& uuid,const
 void HIconHelper::loadIconDoucument(QList<HIconTemplate*> *pIconTemplateList)
 {
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath  = QString(qgetenv("wfsystem_dir"));
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/icons");
+    if(NULL == pIconTemplateList)
+        return;
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
 
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
@@ -122,13 +116,11 @@ void HIconHelper::loadIconTemplateFile(QList<HIconTemplate*> *pIconTemplateList,
 
 void HIconHelper::saveIconDoucument(QList<HIconTemplate*> *pIconTemplateList)
 {
-    QString iconsPath = QString(getenv("wfsystem_dir"));;
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/icons");
+    if(NULL == pIconTemplateList)
+        return;
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
         dirIconsPath.mkdir(iconsPath);

@@ -55,24 +55,22 @@ FORMS += \
     UI/relaypage.ui \
     UI/graphpage.ui
 
-unix{
-
-    LIBS += -L ../lib -lH5IconGui -ldatafile
-}
-
-win32{
-   LIBS += \
-        ../lib/H5IconGui.lib \
-        ../lib/datafile.lib
-}
-
-win32{
-    DEFINES += WIN32
-}
-unix {
-    target.path = /users/huangw/lib
-    INSTALLS += target
-}
-
 RESOURCES += \
     images.qrc
+
+LIBS += -L../lib -lH5IconGui -ldatafile
+unix{
+    UI_DIR = temp/ui
+    MOC_DIR = temp/moc
+    OBJECTS_DIR	= temp/obj
+    LIBS += \
+
+}
+
+win32{
+    UI_DIR = temp/ui
+    MOC_DIR = temp/moc
+    OBJECTS_DIR	= temp/obj
+    LIBS += \
+}
+
