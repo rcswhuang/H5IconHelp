@@ -76,8 +76,8 @@ void HStationList::loadStation()
     memset(&fileHandle,0,sizeof(FILEHANDLE));
     DATAFILEHEADER dataFileHandle;
     //厂站信息
-    openDB(FILE_TYPE_STATION);
-    loadDataFileHeader(FILE_TYPE_STATION,&dataFileHandle);
+    int fd = openDB(FILE_TYPE_STATION);
+    loadDataFileHeader(fd,&dataFileHandle);
     //int wStation = 0;
     for(int i = 0 ; i < dataFileHandle.wTotal; i++)
     {
@@ -211,6 +211,7 @@ bool HStation::loadData(FILEHANDLE& fileHandle)
         EQUIPMENTGROUP pEquip;
         HGroup* group = pGroup;
         openDB(FILE_TYPE_EQUIPMENTGROUP);
+        //最好判断一下 可能station记录的和文件header里面记录的不一致
         for(int i = 0; i < station.wEquipmentGroupCounts;i++,group++)
         {
             loadDBRecord(FILE_TYPE_EQUIPMENTGROUP,++fileHandle.wEquipmentGroup,&pEquip);

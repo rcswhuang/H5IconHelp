@@ -78,7 +78,7 @@ void HGraphHelper::loadAllGraph(QList<HGraph*> *pGraphList)
         return;
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
     char szIconPath[128];
-    getDataFilePath(DFPATH_ICON,szIconPath);
+    getDataFilePath(DFPATH_GRAPH,szIconPath);
     QString iconsPath = QString(szIconPath);
 
     QDir dirIconsPath(iconsPath);
